@@ -17,13 +17,13 @@ public class News {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "post_date")
+    @Column(name = "post_date", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private String postDate;
 
-    @Column(name = "active", columnDefinition = "INT(1) DEFAULT '1'")
+    @Column(name = "active", insertable = false, columnDefinition = "INT(1) DEFAULT '1'")
     private Integer active;
 
     @ManyToOne
@@ -37,11 +37,9 @@ public class News {
     public News() {
     }
 
-    public News(String title, String content, String postDate, Integer active, Company company, User admin) {
+    public News(String title, String content, Company company, User admin) {
         this.title = title;
         this.content = content;
-        this.postDate = postDate;
-        this.active = active;
         this.company = company;
         this.admin = admin;
     }

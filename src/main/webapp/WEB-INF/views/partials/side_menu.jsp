@@ -6,7 +6,11 @@
     <!-- Sidebar Header-->
     <div class="sidebar-header d-flex align-items-center">
         <div class="title">
-            <h1 class="h4">${user.name} ${user.surname}</h1>
+            <h1 class="h4">
+                <a href="/profile">
+                    ${user.name} ${user.surname}
+                </a>
+            </h1>
         </div>
     </div>
     <c:set var="url" value="${requestScope['javax.servlet.forward.request_uri']}"/>
@@ -30,6 +34,9 @@
                 <li <c:if test="${fn:startsWith(url, '/groups')}">
                     class="active"
                 </c:if>> <a href="/groups"></i>Группы</a></li>
+                <li <c:if test="${fn:startsWith(url, '/news')}">
+                    class="active"
+                </c:if>> <a href="/news"></i>Новости</a></li>
             </ul>
         </c:when>
         <c:when test="${user.role.name.equals('teacher') or user.role.name.equals('student')}">

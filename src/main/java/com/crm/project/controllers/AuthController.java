@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 @Controller
 public class AuthController {
-    @GetMapping("/")
+    @GetMapping("/profile")
     public ModelAndView auth(HttpServletRequest request, HttpServletResponse response) {
 
         HttpSession session = request.getSession();
