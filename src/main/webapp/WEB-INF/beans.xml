@@ -40,6 +40,12 @@
         </property>
     </bean>
 
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+        <property name="maxUploadSize" value="5000000" />
+    </bean>
+
     <bean id="roleBean" class="com.crm.project.beans.RoleBean">
         <property name="sessionFactory" ref="sessionFactory"></property>
     </bean>

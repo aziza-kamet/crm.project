@@ -55,6 +55,7 @@
                                             <c:if test="${user.role.name.equals('teacher')}">
                                                 <th>Группы</th>
                                             </c:if>
+                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -88,6 +89,11 @@
                                                         </c:forEach>
                                                     </td>
                                                 </c:if>
+                                                <td>
+                                                    <a href="/lessons/${lesson.id}/attachments">
+                                                        Прикрепления
+                                                    </a>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                         </tbody>

@@ -23,13 +23,13 @@ public class LessonAttachment {
     @Column(name = "mime", columnDefinition = "VARCHAR(255)")
     private String mime;
 
-    @Column(name = "size")
+    @Column(name = "size", columnDefinition = "BIGINT(20)")
     private Integer size;
 
     @Column(name = "attachment")
     private Blob attachment;
 
-    @Column(name = "uploadDate")
+    @Column(name = "uploadDate", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date uploadDate;
 
     @ManyToOne
@@ -43,12 +43,11 @@ public class LessonAttachment {
     public LessonAttachment() {
     }
 
-    public LessonAttachment(String name, String mime, Integer size, Blob attachment, Date uploadDate, Lesson lesson, User user) {
+    public LessonAttachment(String name, String mime, Integer size, Blob attachment, Lesson lesson, User user) {
         this.name = name;
         this.mime = mime;
         this.size = size;
         this.attachment = attachment;
-        this.uploadDate = uploadDate;
         this.lesson = lesson;
         this.user = user;
     }

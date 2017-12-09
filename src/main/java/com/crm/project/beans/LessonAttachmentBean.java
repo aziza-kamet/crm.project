@@ -3,17 +3,22 @@ package com.crm.project.beans;
 import com.crm.project.dao.Lesson;
 import com.crm.project.dao.LessonAttachment;
 import com.crm.project.dao.User;
+import org.apache.commons.io.FilenameUtils;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +30,19 @@ public class LessonAttachmentBean {
     @Autowired
     LessonBean lessonBean;
 
+    private String[] extensions = new String[]{
+            "jpg",
+            "jpeg",
+            "png",
+            "doc",
+            "docx",
+            "xsl",
+            "xslx",
+            "ppt",
+            "pptx",
+            "pdf",
+    };
+
     private SessionFactory sessionFactory;
 
     public SessionFactory getSessionFactory() {
@@ -35,15 +53,31 @@ public class LessonAttachmentBean {
         this.sessionFactory = sessionFactory;
     }
 
-    public void create(String name, String mime, Integer size, Blob attachment, Date uploadDate, Long lid, User user) {
+    public void create(String name, MultipartFile file, Long lid, User user) {
         try{
 
             Session session = sessionFactory.openSession();
             Transaction transaction = session.beginTransaction();
 
-            Lesson lesson = lessonBean.getBy(lid);
+            Blob blob = Hibernate.getLobCreator(session).createBlob(file.getBytes());
+            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 
-            session.save(new LessonAttachment(name, mime, size, attachment, uploadDate, lesson, user));
+            if (!Arrays.asList(extensions).contains(extension)) {
+                return;
+            }
+
+            if (file.getSize() > 5000000) {
+                return;
+            }
+
+            Lesson lesson = lessonBean.getBy(lid);
+            if (name == null || name.equals("")) {
+                name = file.getOriginalFilename();
+            } else {
+                name = name + "." + extension;
+            }
+
+            session.save(new LessonAttachment(name, file.getContentType(), (int) file.getSize(), blob, lesson, user));
             transaction.commit();
 
         }catch (Exception e){
@@ -69,7 +103,7 @@ public class LessonAttachmentBean {
         return lessonAttachment;
     }
 
-    public List<LessonAttachment> getList() {
+    public List<LessonAttachment> getList(Long id) {
 
         try{
 
@@ -78,8 +112,9 @@ public class LessonAttachmentBean {
 
             CriteriaQuery<LessonAttachment> criteriaQuery = builder.createQuery(LessonAttachment.class);
             Root<LessonAttachment> lessonAttachmentsTable = criteriaQuery.from(LessonAttachment.class);
+            Predicate lessonPredicate = builder.equal(lessonAttachmentsTable.get("lesson"), lessonBean.getBy(id));
             criteriaQuery.select(lessonAttachmentsTable);
-            criteriaQuery.where(builder.equal(lessonAttachmentsTable.get("active"), 1));
+            criteriaQuery.where(builder.and(lessonPredicate));
 
             Query query = session.createQuery(criteriaQuery);
 

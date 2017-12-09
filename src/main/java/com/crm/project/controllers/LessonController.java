@@ -50,7 +50,7 @@ public class LessonController {
         Course course = courseBean.getBy(cid);
         User user = (User) request.getSession().getAttribute("user");
 
-        if (!userBean.hasCourse(user, cid)) {
+        if (!user.getRole().getName().equals("admin") && !userBean.hasCourse(user, cid)) {
             response.sendRedirect("403");
             return null;
         }
