@@ -5,6 +5,7 @@ import com.crm.project.beans.NewsBean;
 import com.crm.project.dao.Company;
 import com.crm.project.dao.News;
 import com.crm.project.dao.User;
+import com.crm.project.helpers.AuthChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,11 @@ public class NewsController {
 
     @GetMapping("/news")
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
         if (!user.getRole().getName().equals("admin")) {
             response.sendRedirect("403");
@@ -44,6 +50,11 @@ public class NewsController {
     public void create(HttpServletRequest request, HttpServletResponse response,
                        @RequestParam(name = "title") String title,
                        @RequestParam(name = "content") String content) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
 //      TODO check if user is admin
         User user = (User) request.getSession().getAttribute("user");
         newsBean.create(user, title, content);
@@ -53,6 +64,11 @@ public class NewsController {
     @PostMapping("/news/{id}")
     public void remove(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable(name = "id") Long id) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         newsBean.delete(id);
         response.sendRedirect("/news");
     }
@@ -62,15 +78,20 @@ public class NewsController {
                        @PathVariable(name = "id") Long id,
                        @RequestParam(name = "title") String title,
                        @RequestParam(name = "content") String content) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         newsBean.update(id, title, content);
         response.sendRedirect("/news");
     }
 
-    @GetMapping(name = "/")
+    @GetMapping("/")
     public ModelAndView dashboard(HttpServletRequest request, HttpServletResponse response) {
 
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") == null || session.getAttribute("role") == null) {
+        if (!AuthChecker.isAuth(session)) {
             session.invalidate();
             return new ModelAndView("auth");
         }

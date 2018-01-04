@@ -43,7 +43,7 @@
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>ФИО</th>
+                                            <th>Название</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -90,6 +90,37 @@
                                 <label for="course-out-${course.id}">${course.name}</label>
                             </div>
                         </c:forEach>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-secondary">Закрыть</button>
+                    <button class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="schedule-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="exampleModalLabel1" class="modal-title">Добавить расписание</h4>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+            </div>
+            <form action="" method="post">
+                <div class="modal-body">
+                    <div class="form-course">
+                        <label>День</label>
+                        <select name="dayOfWeek">
+                            <option value="0">Понедельник</option>
+                            <option value="1">Вторник</option>
+                            <option value="2">Среда</option>
+                            <option value="3">Четверг</option>
+                            <option value="4">Пятница</option>
+                            <option value="5">Суббота</option>
+                            <option value="6">Воскресенье</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">

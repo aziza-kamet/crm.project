@@ -5,6 +5,7 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
@@ -14,7 +15,8 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
         http://www.springframework.org/schema/task
-        http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+        http://www.springframework.org/schema/task/spring-task-3.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
     <task:annotation-driven/>
     <context:component-scan base-package="com.crm.project"></context:component-scan>
@@ -40,10 +42,36 @@
         </property>
     </bean>
 
+    <util:map id="DAYS">
+        <entry key="Monday" value="0"/>
+        <entry key="Tuesday" value="1"/>
+        <entry key="Wednesday" value="2"/>
+        <entry key="Thursday" value="3"/>
+        <entry key="Friday" value="4"/>
+        <entry key="Saturday" value="5"/>
+        <entry key="Sunday" value="6"/>
+    </util:map>
+
+    <util:map id="HOURS">
+        <entry key="0" value="8:00-9:00"/>
+        <entry key="1" value="9:00-10:00"/>
+        <entry key="2" value="10:00-11:00"/>
+        <entry key="3" value="11:00-12:00"/>
+        <entry key="4" value="12:00-13:00"/>
+        <entry key="5" value="13:00-14:00"/>
+        <entry key="6" value="14:00-15:00"/>
+        <entry key="7" value="15:00-16:00"/>
+        <entry key="8" value="16:00-17:00"/>
+        <entry key="9" value="17:00-18:00"/>
+        <entry key="10" value="18:00-19:00"/>
+        <entry key="11" value="19:00-20:00"/>
+        <entry key="12" value="20:00-21:00"/>
+        <entry key="13" value="21:00-22:00"/>
+        <entry key="14" value="22:00-23:00"/>
+    </util:map>
+
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-
-        <property name="maxUploadSize" value="5000000" />
     </bean>
 
     <bean id="roleBean" class="com.crm.project.beans.RoleBean">
@@ -87,6 +115,10 @@
     </bean>
 
     <bean id="groupBean" class="com.crm.project.beans.GroupBean">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <bean id="scheduleBean" class="com.crm.project.beans.ScheduleBean">
         <property name="sessionFactory" ref="sessionFactory"></property>
     </bean>
 

@@ -51,6 +51,7 @@
                                                 <th></th>
                                                 <th></th>
                                                 <th></th>
+                                                <th></th>
                                             </c:if>
                                             <th></th>
                                             <th></th>
@@ -77,6 +78,9 @@
                                                     </td>
                                                     <td>
                                                         <a href="/groups/${group.id}/courses">Курсы</a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="/groups/${group.id}/schedule">Расписание</a>
                                                     </td>
                                                 </c:if>
                                                 <td>

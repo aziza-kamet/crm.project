@@ -57,9 +57,9 @@
                                                     <%-- TODO mustn't show id as numeration --%>
                                                 <td>${attachment.name}</td>
                                                 <td>
-                                                    <form action="/attachments/${attachment.id}/download" method="post">
-                                                        <button class="btn btn-link"><i class="fa fa-download"></i></button>
-                                                    </form>
+                                                    <a href="/attachments/${attachment.id}/download" target="_blank">
+                                                        <i class="fa fa-download"></i>
+                                                    </a>
                                                 </td>
                                                 <c:if test="${user.role.name.equals('teacher')}">
                                                     <td>

@@ -4,6 +4,7 @@ import com.crm.project.beans.CompanyBean;
 import com.crm.project.beans.CourseBean;
 import com.crm.project.dao.Company;
 import com.crm.project.dao.User;
+import com.crm.project.helpers.AuthChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,11 @@ public class CourseController {
     public void create(HttpServletRequest request, HttpServletResponse response,
                         @RequestParam(name = "name") String name,
                         @RequestParam(name = "description") String description) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
         courseBean.create(name, description, user.getCompany().getId());
         response.sendRedirect("/courses");
@@ -37,6 +43,11 @@ public class CourseController {
 
     @GetMapping("/courses")
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
         if (!user.getRole().getName().equals("admin")) {
             response.sendRedirect("403");
@@ -50,6 +61,11 @@ public class CourseController {
 
     @GetMapping("/my_courses")
     public ModelAndView my(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
         if (user.getRole().getName().equals("admin")) {
             response.sendRedirect("403");
@@ -65,6 +81,11 @@ public class CourseController {
                        @PathVariable(name = "id") Long id,
                        @RequestParam(name = "name") String name,
                        @RequestParam(name = "description") String description) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         courseBean.update(id, name, description);
         response.sendRedirect("/courses");
     }
@@ -72,6 +93,11 @@ public class CourseController {
     @PostMapping("/courses/{id}")
     public void delete(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable(name = "id") Long id) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         courseBean.delete(id);
         response.sendRedirect("/courses");
     }

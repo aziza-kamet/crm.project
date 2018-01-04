@@ -2,6 +2,7 @@ package com.crm.project.controllers;
 
 import com.crm.project.beans.*;
 import com.crm.project.dao.*;
+import com.crm.project.helpers.AuthChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,11 @@ public class LessonController {
                         @PathVariable(name = "cid") Long cid,
                         @RequestParam(name = "title") String title,
                         @RequestParam(name = "content") String content) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         lessonBean.create(title, content, cid);
         response.sendRedirect("/courses/" + cid + "/lessons");
     }
@@ -46,6 +52,11 @@ public class LessonController {
     @GetMapping("/courses/{cid}/lessons")
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response,
                               @PathVariable(name = "cid") Long cid) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         ModelAndView mv = new ModelAndView("lessons");
         Course course = courseBean.getBy(cid);
         User user = (User) request.getSession().getAttribute("user");
@@ -72,6 +83,11 @@ public class LessonController {
                        @PathVariable(name = "cid") Long cid,
                        @RequestParam(name = "title") String title,
                        @RequestParam(name = "content") String content) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         lessonBean.update(lid, title, content);
         response.sendRedirect("/courses/" + cid + "/lessons");
     }
@@ -80,6 +96,11 @@ public class LessonController {
     public ModelAndView grades(HttpServletRequest request, HttpServletResponse response,
                               @PathVariable(name = "lid") Long lid,
                               @PathVariable(name = "gid") Long gid) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
         if (!user.getRole().getName().equals("teacher")) {
             response.sendRedirect("403");
@@ -100,6 +121,11 @@ public class LessonController {
     public ModelAndView attendances(HttpServletRequest request, HttpServletResponse response,
                               @PathVariable(name = "lid") Long lid,
                               @PathVariable(name = "gid") Long gid) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
         if (!user.getRole().getName().equals("teacher")) {
 //            TODO redirect to proper page
@@ -125,6 +151,11 @@ public class LessonController {
                        @PathVariable(name = "sid") Long sid,
                        @RequestParam(name = "grade") String grade,
                        @RequestParam(name = "note") String note) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         try {
             Integer gradeInt = Integer.parseInt(grade);
             Lesson lesson = lessonBean.getBy(lid);
@@ -143,6 +174,10 @@ public class LessonController {
                        @PathVariable(name = "sid") Long sid,
                        @RequestParam(name = "attendance", required = false) String attendance,
                        @RequestParam(name = "note") String note) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
 
         try {
             Integer attendanceInt = attendance != null ? 1 : 0;

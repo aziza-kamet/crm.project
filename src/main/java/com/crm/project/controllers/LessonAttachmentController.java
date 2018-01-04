@@ -3,6 +3,7 @@ package com.crm.project.controllers;
 import com.crm.project.beans.LessonAttachmentBean;
 import com.crm.project.dao.LessonAttachment;
 import com.crm.project.dao.User;
+import com.crm.project.helpers.AuthChecker;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,12 @@ public class LessonAttachmentController {
 
     @GetMapping("/lessons/{lid}/attachments")
     public ModelAndView auth(HttpServletRequest request, HttpServletResponse response,
-                             @PathVariable(name = "lid") Long lid) {
+                             @PathVariable(name = "lid") Long lid) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
 
         ModelAndView mv = new ModelAndView("lesson_attachments");
         List<LessonAttachment> attachments = attachmentBean.getList(lid);
@@ -47,6 +53,11 @@ public class LessonAttachmentController {
                        @RequestParam(name = "name", required = false) String name,
                        @RequestParam(name = "file") MultipartFile file) throws IOException {
 
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
+
         try {
             User user = (User) request.getSession().getAttribute("user");
             attachmentBean.create(name, file, lid, user);
@@ -56,9 +67,13 @@ public class LessonAttachmentController {
         response.sendRedirect("/lessons/" + lid + "/attachments");
     }
 
-    @PostMapping("/attachments/{id}/download")
+    @GetMapping("/attachments/{id}/download")
     public void download(HttpServletRequest request, HttpServletResponse response,
                          @PathVariable(name = "id") Long id) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
 
         LessonAttachment attachment = attachmentBean.getBy(id);
         try {
@@ -73,12 +88,16 @@ public class LessonAttachmentController {
             e.printStackTrace();
         }
 
-        response.sendRedirect("/lessons/" + attachment.getLesson().getId() + "/attachments");
     }
 
     @PostMapping("/attachments/{id}")
     public void remove(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable(name = "id") Long id) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
 
         LessonAttachment attachment = attachmentBean.getBy(id);
         attachmentBean.delete(id);

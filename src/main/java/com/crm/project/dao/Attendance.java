@@ -32,8 +32,8 @@ public class Attendance {
     }
 
     public Attendance(Integer attendanceValue, String attendanceNote, Lesson lesson, User user) {
-        attendanceValue = attendanceValue;
-        attendanceNote = attendanceNote;
+        this.attendanceValue = attendanceValue;
+        this.attendanceNote = attendanceNote;
         this.lesson = lesson;
         this.user = user;
     }

@@ -7,6 +7,7 @@ import com.crm.project.beans.UserBean;
 import com.crm.project.dao.Company;
 import com.crm.project.dao.Group;
 import com.crm.project.dao.User;
+import com.crm.project.helpers.AuthChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,11 @@ public class GroupController {
     @PostMapping("/groups")
     public void create(HttpServletRequest request, HttpServletResponse response,
                         @RequestParam(name = "name") String name) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
         groupBean.create(name, user.getCompany().getId());
         response.sendRedirect("/groups");
@@ -45,6 +51,11 @@ public class GroupController {
 
     @GetMapping("/groups")
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
         if (!user.getRole().getName().equals("admin")) {
             response.sendRedirect("403");
@@ -60,6 +71,11 @@ public class GroupController {
     public void update(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable(name = "id") Long id,
                        @RequestParam(name = "name") String name) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         groupBean.update(id, name);
         response.sendRedirect("/groups");
     }
@@ -67,13 +83,23 @@ public class GroupController {
     @PostMapping("/groups/{id}")
     public void delete(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable(name = "id") Long id) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         groupBean.delete(id);
         response.sendRedirect("/groups");
     }
 
     @GetMapping("/groups/{id}/students")
     public ModelAndView students(HttpServletRequest request, HttpServletResponse response,
-                            @PathVariable(name = "id") Long id) {
+                            @PathVariable(name = "id") Long id) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         ModelAndView mv = new ModelAndView("group_students");
         User user = (User) request.getSession().getAttribute("user");
         Group group = groupBean.getBy(id);
@@ -86,7 +112,12 @@ public class GroupController {
 
     @GetMapping("/groups/{id}/teachers")
     public ModelAndView teachers(HttpServletRequest request, HttpServletResponse response,
-                            @PathVariable(name = "id") Long id) {
+                            @PathVariable(name = "id") Long id) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         ModelAndView mv = new ModelAndView("group_teachers");
         User user = (User) request.getSession().getAttribute("user");
         Group group = groupBean.getBy(id);
@@ -102,6 +133,11 @@ public class GroupController {
     public void addStudents(HttpServletRequest request, HttpServletResponse response,
                             @PathVariable(name = "id") Long id,
                             @RequestParam(name = "students") String[] students) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         Group group = groupBean.getBy(id);
         for (String sid:
              students) {
@@ -120,6 +156,11 @@ public class GroupController {
     public void deleteStudents(HttpServletRequest request, HttpServletResponse response,
                             @PathVariable(name = "gid") Long gid,
                             @PathVariable(name = "sid") Long sid) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         Group group = groupBean.getBy(gid);
         group.getUsers().remove(userBean.getBy(sid));
         groupBean.update(group);
@@ -131,6 +172,11 @@ public class GroupController {
     public void addTeachers(HttpServletRequest request, HttpServletResponse response,
                             @PathVariable(name = "id") Long id,
                             @RequestParam(name = "teachers") String[] teachers) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         Group group = groupBean.getBy(id);
         for (String tid:
                 teachers) {
@@ -149,6 +195,11 @@ public class GroupController {
     public void deleteTeachers(HttpServletRequest request, HttpServletResponse response,
                                @PathVariable(name = "gid") Long gid,
                                @PathVariable(name = "tid") Long tid) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         Group group = groupBean.getBy(gid);
         group.getUsers().remove(userBean.getBy(tid));
         groupBean.update(group);
@@ -159,6 +210,11 @@ public class GroupController {
     @GetMapping("/groups/{id}/courses")
     public ModelAndView courses(HttpServletRequest request, HttpServletResponse response,
                                  @PathVariable(name = "id") Long id) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         ModelAndView mv = new ModelAndView("group_courses");
         User user = (User) request.getSession().getAttribute("user");
         if (!user.getRole().getName().equals("admin")) {
@@ -178,6 +234,11 @@ public class GroupController {
     public void addCourses(HttpServletRequest request, HttpServletResponse response,
                             @PathVariable(name = "id") Long id,
                             @RequestParam(name = "courses") String[] courses) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         Group group = groupBean.getBy(id);
         for (String tid:
                 courses) {
@@ -196,6 +257,11 @@ public class GroupController {
     public void deleteCourses(HttpServletRequest request, HttpServletResponse response,
                                @PathVariable(name = "gid") Long gid,
                                @PathVariable(name = "cid") Long cid) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         Group group = groupBean.getBy(gid);
         group.getCourses().remove(courseBean.getBy(cid));
         groupBean.update(group);
@@ -205,6 +271,11 @@ public class GroupController {
 
     @GetMapping("/my_groups")
     public ModelAndView my(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
         if (user.getRole().getName().equals("admin")) {
             response.sendRedirect("403");

@@ -4,6 +4,7 @@ import com.crm.project.beans.CompanyBean;
 import com.crm.project.beans.RoleBean;
 import com.crm.project.beans.UserBean;
 import com.crm.project.dao.User;
+import com.crm.project.helpers.AuthChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,11 @@ public class UserController {
                             @RequestParam(name = "login") String login,
                             @RequestParam(name = "name") String name,
                             @RequestParam(name = "surname") String surname) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
 //        TODO check if such login exists
         userBean.update(user.getId(), login, name, surname, user.getRole().getId(), user.getCompany().getId());
@@ -59,6 +65,11 @@ public class UserController {
                                @RequestParam(name = "password") String password,
                                @RequestParam(name = "new-password") String newPassword,
                                @RequestParam(name = "conf-password") String confPassword) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
 
         if (userBean.getBy(user.getLogin(), password) == null) {
@@ -77,7 +88,12 @@ public class UserController {
     }
 
     @GetMapping("/teachers")
-    public ModelAndView teachers(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView teachers(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
 
         User user = (User) request.getSession().getAttribute("user");
         ModelAndView mv = new ModelAndView("teachers");
@@ -92,6 +108,11 @@ public class UserController {
                             @RequestParam(name = "conf-password") String confPassword,
                             @RequestParam(name = "name") String name,
                             @RequestParam(name = "surname") String surname) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
 
         if (!password.equals(confPassword)) {
@@ -113,6 +134,11 @@ public class UserController {
     public void deleteTeacher(HttpServletRequest request, HttpServletResponse response,
                             @PathVariable(name = "id") Long id) throws IOException {
 
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
+
         userBean.delete(id);
 
         response.sendRedirect("/teachers");
@@ -124,6 +150,11 @@ public class UserController {
                             @RequestParam(name = "login") String login,
                             @RequestParam(name = "name") String name,
                             @RequestParam(name = "surname") String surname) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
 
         try {
@@ -136,7 +167,12 @@ public class UserController {
     }
 
     @GetMapping("/students")
-    public ModelAndView students(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView students(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
 
         User user = (User) request.getSession().getAttribute("user");
         ModelAndView mv = new ModelAndView("students");
@@ -151,6 +187,11 @@ public class UserController {
                               @RequestParam(name = "conf-password") String confPassword,
                               @RequestParam(name = "name") String name,
                               @RequestParam(name = "surname") String surname) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
 
         if (!password.equals(confPassword)) {
@@ -170,6 +211,11 @@ public class UserController {
     @PostMapping("/students/{id}")
     public void deleteStudents(HttpServletRequest request, HttpServletResponse response,
                               @PathVariable(name = "id") Long id) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
 
         userBean.delete(id);
 

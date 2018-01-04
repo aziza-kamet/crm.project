@@ -2,6 +2,7 @@ package com.crm.project.controllers;
 
 import com.crm.project.beans.MarkBean;
 import com.crm.project.dao.User;
+import com.crm.project.helpers.AuthChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,11 @@ public class MarkController {
 
     @GetMapping("/my_grades")
     public ModelAndView my(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
         if (!user.getRole().getName().equals("student")) {
             response.sendRedirect("403");
