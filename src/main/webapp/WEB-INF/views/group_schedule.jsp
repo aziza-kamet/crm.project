@@ -58,13 +58,9 @@
                                         <c:forEach items="${hours}" var="hour">
                                             <tr>
                                                 <td>${hour.value}</td>
-                                                <td>${schedule.get(hour.key).get(days.get("Monday")).course.name}</td>
-                                                <td>${schedule.get(hour.key).get(days.get("Tuesday")).course.name}</td>
-                                                <td>${schedule.get(hour.key).get(days.get("Wednesday")).course.name}</td>
-                                                <td>${schedule.get(hour.key).get(days.get("Thursday")).course.name}</td>
-                                                <td>${schedule.get(hour.key).get(days.get("Friday")).course.name}</td>
-                                                <td>${schedule.get(hour.key).get(days.get("Saturday")).course.name}</td>
-                                                <td>${schedule.get(hour.key).get(days.get("Sunday")).course.name}</td>
+                                                <c:forEach items="${days}" var="day">
+                                                    <td>${schedule.get(hour.key).get(day.key).course.name}</td>
+                                                </c:forEach>
                                             </tr>
                                         </c:forEach>
                                         </tbody>
@@ -78,6 +74,62 @@
         </div>
     </div>
 </div>
+
+<div id="add-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="exampleModalLabel" class="modal-title">Добавить урок в расписание</h4>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+            </div>
+            <form action="/groups/${gid}/schedule" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Курс</label>
+                        <select name="course" class="form-control">
+                            <c:forEach items="${courses}" var="course">
+                                <option value="${course.id}">${course.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>День</label>
+                        <select name="day" class="form-control">
+                            <c:forEach items="${days}" var="day">
+                                <option value="${day.key}">${day.value}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Время</label>
+                        <select name="hour" class="form-control">
+                            <c:forEach items="${hours}" var="hour">
+                                <option value="${hour.key}">${hour.value}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>День начала</label>
+                        <input type="date" name="startDay" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>День окончания</label>
+                        <input type="date" name="endDay" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Заметки</label>
+                        <input type="text" name="notes" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-secondary">Закрыть</button>
+                    <button class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 </body>
 <jsp:include page="partials/footer.jsp"/>
 

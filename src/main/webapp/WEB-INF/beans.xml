@@ -43,13 +43,13 @@
     </bean>
 
     <util:map id="DAYS">
-        <entry key="Monday" value="0"/>
-        <entry key="Tuesday" value="1"/>
-        <entry key="Wednesday" value="2"/>
-        <entry key="Thursday" value="3"/>
-        <entry key="Friday" value="4"/>
-        <entry key="Saturday" value="5"/>
-        <entry key="Sunday" value="6"/>
+        <entry key="0" value="Monday"/>
+        <entry key="1" value="Tuesday"/>
+        <entry key="2" value="Wednesday"/>
+        <entry key="3" value="Thursday"/>
+        <entry key="4" value="Friday"/>
+        <entry key="5" value="Saturday"/>
+        <entry key="6" value="Sunday"/>
     </util:map>
 
     <util:map id="HOURS">

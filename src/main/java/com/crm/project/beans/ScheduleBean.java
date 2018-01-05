@@ -1,5 +1,6 @@
 package com.crm.project.beans;
 
+import com.crm.project.dao.Course;
 import com.crm.project.dao.Group;
 import com.crm.project.dao.Schedule;
 import org.hibernate.Session;
@@ -12,6 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,19 +32,19 @@ public class ScheduleBean {
         this.sessionFactory = sessionFactory;
     }
 
-//    public void create(String name) {
-//        try{
-//
-//            Session session = sessionFactory.openSession();
-//            Transaction transaction = session.beginTransaction();
-//
-//            session.save(new Schedule(name));
-//            transaction.commit();
-//
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//    }
+    public void create(Group group, Course course, Integer did, Integer hid, Date startDate, Date endDate, String notes) {
+        try{
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+
+            session.save(new Schedule(did, hid, startDate, endDate, notes, group, course));
+            transaction.commit();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 //    public Schedule getBy(Long id) {
 //        Schedule schedule = null;
