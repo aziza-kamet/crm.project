@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,8 +54,10 @@ public class LessonController {
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response,
                               @PathVariable(name = "cid") Long cid) throws IOException {
 
+        HttpSession session = request.getSession();
         if (!AuthChecker.isAuth(request.getSession(), response)) {
-            return null;
+            session.invalidate();
+            return new ModelAndView("auth");
         }
 
         ModelAndView mv = new ModelAndView("lessons");

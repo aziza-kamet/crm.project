@@ -1,6 +1,8 @@
 package com.crm.project.dao;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -21,10 +23,12 @@ public class Schedule {
     @Column(name = "hour_id")
     private Integer hourId;
 
-    @Column(name = "start_date")
+    @Column(name = "start_date", columnDefinition = "DATETIME")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
 
-    @Column(name = "end_date")
+    @Column(name = "end_date", columnDefinition = "DATETIME")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
 
     @Column(name = "notes")
@@ -113,5 +117,15 @@ public class Schedule {
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public String getStartDateString() {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(this.startDate);
+    }
+
+    public String getEndDateString() {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(this.endDate);
     }
 }

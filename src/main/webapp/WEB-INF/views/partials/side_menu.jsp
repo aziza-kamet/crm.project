@@ -47,6 +47,9 @@
                 <li <c:if test="${fn:startsWith(url, '/my_groups') or fn:startsWith(url, '/groups')}">
                     class="active"
                 </c:if>> <a href="/my_groups"></i>Мои группы</a></li>
+                <li <c:if test="${fn:startsWith(url, '/schedule')}">
+                    class="active"
+                </c:if>> <a href="/schedule"></i>Расписание</a></li>
             </ul>
             <c:if test="${user.role.name.equals('student')}">
                 <ul class="list-unstyled">

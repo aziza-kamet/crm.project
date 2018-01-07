@@ -1,17 +1,12 @@
 package com.crm.project.beans;
 
-import com.crm.project.dao.Course;
-import com.crm.project.dao.Group;
-import com.crm.project.dao.Schedule;
+import com.crm.project.dao.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,47 +41,6 @@ public class ScheduleBean {
         }
     }
 
-//    public Schedule getBy(Long id) {
-//        Schedule schedule = null;
-//
-//        try{
-//
-//            Session session = sessionFactory.openSession();
-//            Transaction transaction = session.beginTransaction();
-//
-//            schedule = session.find(Schedule.class, id);
-//            transaction.commit();
-//
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//
-//        return schedule;
-//    }
-
-//    public Schedule getBy(String name) {
-//
-//        try{
-//
-//            Session session = sessionFactory.openSession();
-//            CriteriaBuilder builder = session.getCriteriaBuilder();
-//
-//            CriteriaQuery<Schedule> criteriaQuery = builder.createQuery(Schedule.class);
-//            Root<Schedule> schedulesTable = criteriaQuery.from(Schedule.class);
-//            criteriaQuery.select(schedulesTable);
-//            criteriaQuery.where(builder.equal(schedulesTable.get("name"), name));
-//
-//            Query query = session.createQuery(criteriaQuery);
-//
-//            return (Schedule) query.getSingleResult();
-//
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
-
     public List<Schedule> getListByGroup(Group group) {
 
         try{
@@ -111,34 +65,67 @@ public class ScheduleBean {
         return new ArrayList<Schedule>();
     }
 
-//    public void update(Long id, String name) {
-//        try{
-//
-//            Session session = sessionFactory.openSession();
-//            Transaction transaction = session.beginTransaction();
-//
-//            Schedule schedule = session.find(Schedule.class, id);
-//            schedule.setName(name);
-//            session.update(schedule);
-//            transaction.commit();
-//
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void delete(Long id) {
-//        try{
-//
-//            Session session = sessionFactory.openSession();
-//            Transaction transaction = session.beginTransaction();
-//
-//            Schedule schedule = session.find(Schedule.class, id);
-//            session.delete(schedule);
-//            transaction.commit();
-//
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//    }
+    public List<Schedule> getListByUser(User user) {
+
+        try{
+
+            Session session = sessionFactory.openSession();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+
+            CriteriaQuery<Schedule> criteriaQuery = builder.createQuery(Schedule.class);
+            Root<Schedule> schedulesTable = criteriaQuery.from(Schedule.class);
+            Join<Schedule, Group> groupJoin = schedulesTable.join("group");
+            Join<Group, GroupUser> groupUserJoin = groupJoin.join("groupUsers");
+            Predicate userPredicate = builder.equal(groupUserJoin.get("user"), user);
+            criteriaQuery.select(schedulesTable)
+                    .where(userPredicate);
+
+            Query query = session.createQuery(criteriaQuery);
+
+            return query.getResultList();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return new ArrayList<Schedule>();
+    }
+
+    public void update(Long id, Group group, Course course, Integer did, Integer hid, Date startDate, Date endDate, String notes) {
+        try{
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+
+            Schedule schedule = session.find(Schedule.class, id);
+            schedule.setGroup(group);
+            schedule.setCourse(course);
+            schedule.setDayId(did);
+            schedule.setHourId(hid);
+            schedule.setStartDate(startDate);
+            schedule.setEndDate(endDate);
+            schedule.setNotes(notes);
+
+            session.update(schedule);
+            transaction.commit();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(Long id) {
+        try{
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+
+            Schedule schedule = session.find(Schedule.class, id);
+            session.delete(schedule);
+            transaction.commit();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
