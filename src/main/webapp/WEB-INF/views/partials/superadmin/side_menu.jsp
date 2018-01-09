@@ -23,8 +23,5 @@
         <li <c:if test="${url.equals('/superadmin/companies')}">
             class="active"
         </c:if>> <a href="/superadmin/companies"> <i class="fa fa-building"></i>Компании</a></li>
-        <li> <a href="#"> <i class="icon-screen"></i>Demo </a></li>
-        <li> <a href="#"> <i class="icon-mail"></i>Demo </a></li>
-        <li> <a href="#"> <i class="icon-picture"></i>Demo </a></li>
     </ul>
 </nav>

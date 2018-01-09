@@ -105,7 +105,7 @@ public class GroupController {
         Group group = groupBean.getBy(id);
 
         mv.addObject("students", groupBean.students(group));
-        mv.addObject("studentsOut", groupBean.studentsOut(companyBean.getBy(user.getCompany().getId())));
+        mv.addObject("studentsOut", groupBean.usersOut(user.getCompany(), group, "student"));
         mv.addObject("gid", id);
         return mv;
     }
@@ -124,7 +124,7 @@ public class GroupController {
         Company company = companyBean.getBy(user.getCompany().getId());
 
         mv.addObject("teachers", groupBean.teachers(group));
-        mv.addObject("teachersOut", groupBean.teachersOut(company, group));
+        mv.addObject("teachersOut", groupBean.usersOut(company, group, "teacher"));
         mv.addObject("gid", id);
         return mv;
     }

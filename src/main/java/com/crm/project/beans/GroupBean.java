@@ -136,7 +136,7 @@ public class GroupBean {
         }
     }
 
-    public List<User> studentsOut(Company company) {
+    public List<User> usersOut(Company company, Group group, String role) {
 
         try{
 
@@ -145,13 +145,23 @@ public class GroupBean {
 
             CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
             Root<User> usersTable = criteriaQuery.from(User.class);
-            Join<User, GroupUser> groupUserJoin = usersTable.join("groupUsers", JoinType.LEFT);
-            Predicate studentsPredicate = builder.equal(usersTable.get("role"), roleBean.getBy("student"));
-            Predicate companyPredicate = builder.equal(usersTable.get("company"), company);
-            Predicate outPredicate = groupUserJoin.isNull();
-            Predicate activePredicate = builder.equal(usersTable.get("active"), 1);
+
+            Subquery<Long> sub = criteriaQuery.subquery(Long.class);
+            Root<GroupUser> groupUsersTable = sub.from(GroupUser.class);
+            Join<GroupUser, User> userJoin = groupUsersTable.join("user", JoinType.LEFT);
+            Predicate groupPredicate = builder.equal(groupUsersTable.get("group"), group);
+            sub.select(userJoin.<Long>get("id"));
+            sub.where(groupPredicate);
+
+            Predicate userPredicates[] = {
+                    builder.equal(usersTable.get("role"), roleBean.getBy(role)),
+                    builder.equal(usersTable.get("company"), company),
+                    builder.equal(usersTable.get("active"), 1),
+                    usersTable.get("id").in(sub).not()
+            };
+
             criteriaQuery.select(usersTable);
-            criteriaQuery.where(builder.and(studentsPredicate, companyPredicate, outPredicate, activePredicate));
+            criteriaQuery.where(builder.and(userPredicates));
 
             Query query = session.createQuery(criteriaQuery);
 
@@ -175,13 +185,15 @@ public class GroupBean {
             CriteriaBuilder builder = session.getCriteriaBuilder();
 
             CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
-            Root<User> usersTable = criteriaQuery.from(User.class);
-            Join<User, GroupUser> groupUserJoin = usersTable.join("groupUsers");
-            Predicate studentsPredicate = builder.equal(usersTable.get("role"), roleBean.getBy("student"));
+            Root<Group> groupsTable = criteriaQuery.from(Group.class);
+            Join<Group, GroupUser> groupUserJoin = groupsTable.join("groupUsers");
+            Join<GroupUser, User> userJoin = groupUserJoin.join("user");
+            Predicate studentsPredicate = builder.equal(userJoin.get("role"), roleBean.getBy("student"));
             Predicate groupPredicate = builder.equal(groupUserJoin.get("group"), group);
-            Predicate activePredicate = builder.equal(usersTable.get("active"), 1);
-            criteriaQuery.select(usersTable);
-            criteriaQuery.where(builder.and(studentsPredicate, groupPredicate, activePredicate));
+            Predicate groupActivePredicate = builder.equal(groupsTable.get("active"), 1);
+            Predicate userActivePredicate = builder.equal(userJoin.get("active"), 1);
+            criteriaQuery.select(userJoin);
+            criteriaQuery.where(builder.and(studentsPredicate, groupPredicate, groupActivePredicate, userActivePredicate));
 
             Query query = session.createQuery(criteriaQuery);
 
@@ -209,12 +221,10 @@ public class GroupBean {
             Join<User, GroupUser> groupUserJoin = usersTable.join("groupUsers", JoinType.LEFT);
             Predicate teachersPredicate = builder.equal(usersTable.get("role"), roleBean.getBy("teacher"));
             Predicate companyPredicate = builder.equal(usersTable.get("company"), company);
-            Predicate outPredicate = groupUserJoin.isNull();
-            Predicate othersPredicate = builder.notEqual(groupUserJoin.get("group"), group);
-            Predicate orPredicate = builder.or(outPredicate, othersPredicate);
+            Predicate groupPredicate = builder.notEqual(groupUserJoin.get("group"), group);
             Predicate activePredicate = builder.equal(usersTable.get("active"), 1);
             criteriaQuery.select(usersTable);
-            criteriaQuery.where(builder.and(teachersPredicate, companyPredicate, orPredicate, activePredicate));
+            criteriaQuery.where(builder.and(teachersPredicate, companyPredicate, groupPredicate, activePredicate));
 
             Query query = session.createQuery(criteriaQuery);
 
