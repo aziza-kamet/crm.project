@@ -30,8 +30,9 @@ public class CompanyController {
     @PostMapping("/superadmin/companies")
     public void create(HttpServletRequest request, HttpServletResponse response,
                        @RequestParam(name = "name") String name,
+                       @RequestParam(name = "keyword") String keyword,
                        @RequestParam(name = "description") String description) throws IOException {
-        companyBean.create(name, description);
+        companyBean.create(name, description, keyword);
         response.sendRedirect("/superadmin/companies");
     }
 

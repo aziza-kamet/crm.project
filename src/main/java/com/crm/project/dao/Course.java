@@ -22,7 +22,7 @@ public class Course {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "LONGTEXT")
     private String description;
 
     @Column(name = "active", insertable = false, columnDefinition = "INT(1) DEFAULT '1'")

@@ -1,7 +1,6 @@
 package com.crm.project.beans;
 
 import com.crm.project.dao.*;
-import jdk.nashorn.internal.scripts.JO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -31,22 +30,29 @@ public class UserBean {
         this.sessionFactory = sessionFactory;
     }
 
-    public void create(String login, String password, String name,
+    public boolean create(String login, String password, String name,
                        String surname, Long roleId, Long companyId) {
         try{
 
-            Session session = sessionFactory.openSession();
-            Transaction transaction = session.beginTransaction();
-
-            Role role = roleBean.getBy(roleId);
             Company company = companyBean.getBy(companyId);
+            if (getByCompanyLogin(company.getAppendedLogin(login)) == null) {
 
-            session.save(new User(login, password, name, surname, company, role));
-            transaction.commit();
+                Session session = sessionFactory.openSession();
+                Transaction transaction = session.beginTransaction();
+
+                Role role = roleBean.getBy(roleId);
+
+                session.save(new User(login, company.getAppendedLogin(login), password, name, surname, company, role));
+                transaction.commit();
+
+                return true;
+            }
 
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        return false;
     }
 
     public User getBy(Long id) {
@@ -78,7 +84,7 @@ public class UserBean {
             CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
             Root<User> usersTable = criteriaQuery.from(User.class);
             criteriaQuery.select(usersTable);
-            Predicate loginPredicate = builder.equal(usersTable.get("login"), login);
+            Predicate loginPredicate = builder.equal(usersTable.get("companyLogin"), login);
             Predicate passwordPredicate = builder.equal(usersTable.get("password"), password);
             Predicate activePredicate = builder.equal(usersTable.get("active"), 1);
             criteriaQuery.where(builder.and(loginPredicate, passwordPredicate, activePredicate));
@@ -94,7 +100,7 @@ public class UserBean {
         return null;
     }
 
-    public User getByLogin(String login) {
+    public User getByCompanyLogin(String login) {
 
         try{
 
@@ -103,8 +109,12 @@ public class UserBean {
 
             CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
             Root<User> usersTable = criteriaQuery.from(User.class);
+            Predicate userPredicates[] = {
+                    builder.equal(usersTable.get("companyLogin"), login),
+                    builder.equal(usersTable.get("active"), 1)
+            };
             criteriaQuery.select(usersTable);
-            criteriaQuery.where(builder.equal(usersTable.get("login"), login));
+            criteriaQuery.where(builder.and(userPredicates));
 
             Query query = session.createQuery(criteriaQuery);
 
@@ -223,11 +233,14 @@ public class UserBean {
             Session session = sessionFactory.openSession();
             Transaction transaction = session.beginTransaction();
 
+            Company company = companyBean.getBy(companyId);
+
             User user = session.find(User.class, id);
             user.setLogin(login);
+            user.setCompanyLogin(company.getAppendedLogin(login));
             user.setName(name);
             user.setSurname(surname);
-            user.setCompany(session.find(Company.class, companyId));
+            user.setCompany(company);
             user.setRole(session.find(Role.class, roleId));
             session.update(user);
             transaction.commit();

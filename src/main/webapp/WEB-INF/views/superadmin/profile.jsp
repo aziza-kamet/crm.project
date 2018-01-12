@@ -60,7 +60,7 @@
                         <div class="col-lg-6">
                             <div class="card">
                                 <div class="card-header d-flex align-items-center">
-                                    <h3 class="h4">Обновит пароль</h3>
+                                    <h3 class="h4">Обновить пароль</h3>
                                 </div>
                                 <div class="card-body">
                                     <form class="form-horizontal" action="/superadmin/password" method="post">

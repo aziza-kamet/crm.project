@@ -44,6 +44,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Название</th>
+                                            <th>Ключевое слово(?)</th>
                                             <th>Описание</th>
                                             <th></th>
                                             <th></th>
@@ -55,6 +56,7 @@
                                                     <%-- TODO mustn't show id as numeration --%>
                                                 <th scope="row">${company.id}</th>
                                                 <td>${company.name}</td>
+                                                <td>${company.keyword}</td>
                                                 <td>${company.description}</td>
                                                 <td>
                                                     <form action="/superadmin/companies/${company.id}" method="post">
@@ -63,7 +65,8 @@
                                                 </td>
                                                 <td>
                                                     <a href="#" data-toggle="modal" data-target="#edit-modal"
-                                                       data-action="/superadmin/companies/${company.id}/edit" data-name="${company.name}" data-desc="${company.description}">
+                                                       data-action="/superadmin/companies/${company.id}/edit" data-name="${company.name}"
+                                                       data-desc="${company.description}">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
                                                 </td>
@@ -94,6 +97,10 @@
                     <div class="form-group">
                         <label>Название</label>
                         <input type="text" placeholder="Название" class="form-control" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label>Ключевое слово</label>
+                        <input type="text" placeholder="Например: bitlab" class="form-control" name="keyword">
                     </div>
                     <div class="form-group">
                         <label>Описание</label>

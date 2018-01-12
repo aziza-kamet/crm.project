@@ -138,7 +138,6 @@ public class UserController {
             return;
         }
 
-
         userBean.delete(id);
 
         response.sendRedirect("/teachers");
@@ -271,7 +270,7 @@ public class UserController {
         response.sendRedirect("/superadmin/admins");
     }
 
-    @PostMapping("/superadmin/users/{id}")
+    @PostMapping("/superadmin/admins/{id}")
     public void deleteAdmin(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable(name = "id") Long id) throws IOException {
 

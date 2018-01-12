@@ -55,7 +55,7 @@
                                             <tr>
                                                     <%-- TODO mustn't show id as numeration --%>
                                                 <th scope="row">${user.id}</th>
-                                                <td>${user.login}</td>
+                                                <td>${user.companyLogin}</td>
                                                 <td>${user.company.name}</td>
                                                 <td>${user.name}</td>
                                                 <td>${user.surname}</td>

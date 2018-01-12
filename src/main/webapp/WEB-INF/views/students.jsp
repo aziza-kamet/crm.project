@@ -42,7 +42,6 @@
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>Логин</th>
                                             <th>Имя</th>
                                             <th>Фамилия</th>
@@ -53,9 +52,7 @@
                                         <tbody>
                                         <c:forEach items="${users}" var="user">
                                             <tr>
-                                                    <%-- TODO mustn't show id as numeration --%>
-                                                <th scope="row">${user.id}</th>
-                                                <td>${user.login}</td>
+                                                <td>${user.companyLogin}</td>
                                                 <td>${user.name}</td>
                                                 <td>${user.surname}</td>
                                                 <td>

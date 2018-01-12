@@ -23,6 +23,9 @@ public class Company {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "keyword")
+    private String keyword;
+
     @Column(name = "active", insertable = false, columnDefinition = "INT(1) DEFAULT '1'")
     private Integer active;
 
@@ -39,9 +42,10 @@ public class Company {
     public Company() {
     }
 
-    public Company(String name, String description) {
+    public Company(String name, String description, String keyword) {
         this.name = name;
         this.description = description;
+        this.keyword = keyword;
     }
 
     public Long getId() {
@@ -90,5 +94,17 @@ public class Company {
 
     public void setGroups(List<Group> groups) {
         this.groups = groups;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public String getAppendedLogin(String login) {
+        return login + "@" + keyword + ".kz";
     }
 }

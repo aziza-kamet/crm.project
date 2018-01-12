@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Table(name = "group_courses")
 public class GroupCourse {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 

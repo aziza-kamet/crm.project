@@ -18,8 +18,11 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "login", unique = true)
+    @Column(name = "login")
     private String login;
+
+    @Column(name = "company_login")
+    private String companyLogin;
 
     @Column(name = "password")
     private String password;
@@ -56,8 +59,9 @@ public class User {
     public User() {
     }
 
-    public User(String login, String password, String name, String surname, Company company, Role role) {
+    public User(String login, String companyLogin, String password, String name, String surname, Company company, Role role) {
         this.login = login;
+        this.companyLogin = companyLogin;
         this.password = password;
         this.name = name;
         this.surname = surname;
@@ -143,6 +147,14 @@ public class User {
 
     public void setGroupUsers(List<GroupUser> groupUsers) {
         this.groupUsers = groupUsers;
+    }
+
+    public String getCompanyLogin() {
+        return companyLogin;
+    }
+
+    public void setCompanyLogin(String companyLogin) {
+        this.companyLogin = companyLogin;
     }
 
     @Override

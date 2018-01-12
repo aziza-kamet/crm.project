@@ -26,13 +26,13 @@ public class CompanyBean {
         this.sessionFactory = sessionFactory;
     }
 
-    public void create(String name, String description) {
+    public void create(String name, String description, String keyword) {
         try{
 
             Session session = sessionFactory.openSession();
             Transaction transaction = session.beginTransaction();
 
-            session.save(new Company(name, description));
+            session.save(new Company(name, description, keyword));
             transaction.commit();
 
         }catch (Exception e){
@@ -90,6 +90,7 @@ public class CompanyBean {
             Company company = session.find(Company.class, id);
             company.setName(name);
             company.setDescription(description);
+
             session.update(company);
             transaction.commit();
 
