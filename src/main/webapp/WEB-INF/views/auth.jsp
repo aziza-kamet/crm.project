@@ -16,21 +16,12 @@
         <div class="container d-flex align-items-center">
             <div class="form-holder has-shadow">
                 <div class="row">
-                    <!-- Logo & Information Panel-->
-                    <div class="col-lg-6">
-                        <div class="info d-flex align-items-center">
-                            <div class="content">
-                                <div class="logo">
-                                    <h1>Добро пожаловать в CRM!</h1>
-                                </div>
-                                <p></p>
-                            </div>
-                        </div>
-                    </div>
                     <!-- Form Panel    -->
-                    <div class="col-lg-6 bg-white">
+                    <div class="col-lg-12 bg-white">
                         <div class="form d-flex align-items-center">
                             <div class="content">
+                                <h1 class="h-center c-gray">Добро пожаловать в CRM!</h1>
+
                                 <form id="login-form" method="post" action="/auth">
                                     <div class="form-group">
                                         <input id="login-username" type="text" name="login" required="" class="input-material">
@@ -40,7 +31,7 @@
                                         <input id="login-password" type="password" name="password" required="" class="input-material">
                                         <label for="login-password" class="label-material">Пароль</label>
                                     </div>
-                                    <button class="btn btn-primary">Войти</button>
+                                    <button class="btn btn-primary btn-full-width">Войти</button>
                                 </form>
                             </div>
                         </div>
