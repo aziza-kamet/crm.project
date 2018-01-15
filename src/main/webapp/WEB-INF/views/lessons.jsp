@@ -44,7 +44,6 @@
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>Название</th>
                                             <th>Содержание</th>
                                             <th>Дата добавления(?)</th>
@@ -61,8 +60,6 @@
                                         <tbody>
                                         <c:forEach items="${lessons}" var="lesson">
                                             <tr>
-                                                    <%-- TODO mustn't show id as numeration --%>
-                                                <th scope="row">${lesson.id}</th>
                                                 <td>${lesson.title}</td>
                                                 <td>${lesson.content}</td>
                                                 <td>${lesson.postDate}</td>

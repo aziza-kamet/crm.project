@@ -42,7 +42,6 @@
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>Название</th>
                                             <th></th>
                                         </tr>
@@ -50,8 +49,6 @@
                                         <tbody>
                                         <c:forEach items="${courses}" var="course">
                                             <tr>
-                                                <%-- TODO mustn't show id as numeration --%>
-                                                <th scope="row">${course.id}</th>
                                                 <td>${course.name}</td>
                                                 <td>
                                                     <form action="/groups/${gid}/courses/${course.id}" method="post">

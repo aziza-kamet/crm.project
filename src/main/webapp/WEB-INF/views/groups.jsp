@@ -44,7 +44,6 @@
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>Название</th>
                                             <th>Дата создания</th>
                                             <c:if test="${user.role.name.equals('admin')}">
@@ -60,8 +59,6 @@
                                         <tbody>
                                         <c:forEach items="${groups}" var="group">
                                             <tr>
-                                                <%-- TODO mustn't show id as numeration --%>
-                                                <th scope="row">${group.id}</th>
                                                 <td>${group.name}</td>
                                                 <td>${group.createdDate}</td>
                                                 <c:if test="${user.role.name.equals('admin')}">

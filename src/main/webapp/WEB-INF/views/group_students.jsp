@@ -42,7 +42,6 @@
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>ФИО</th>
                                             <c:if test="${user.role.name.equals('admin')}">
                                                 <th></th>
@@ -52,8 +51,6 @@
                                         <tbody>
                                         <c:forEach items="${students}" var="student">
                                             <tr>
-                                                    <%-- TODO mustn't show id as numeration --%>
-                                                <th scope="row">${student.id}</th>
                                                 <td>${student.name} ${student.surname}</td>
                                                 <c:if test="${user.role.name.equals('admin')}">
                                                     <td>

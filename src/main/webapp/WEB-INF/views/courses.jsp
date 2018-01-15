@@ -44,7 +44,6 @@
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>Название</th>
                                             <th>Описание</th>
                                             <c:if test="${user.role.name.equals('admin')}">
@@ -57,8 +56,6 @@
                                         <tbody>
                                         <c:forEach items="${courses}" var="course">
                                             <tr>
-                                                    <%-- TODO mustn't show id as numeration --%>
-                                                <th scope="row">${course.id}</th>
                                                 <td>${course.name}</td>
                                                 <td>${course.description}</td>
                                                 <c:if test="${user.role.name.equals('admin')}">
