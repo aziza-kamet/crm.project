@@ -1,6 +1,9 @@
 package com.crm.project.dao;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by aziza on 03.11.17.
@@ -21,7 +24,7 @@ public class News {
     private String content;
 
     @Column(name = "post_date", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private String postDate;
+    private Date postDate;
 
     @Column(name = "active", insertable = false, columnDefinition = "INT(1) DEFAULT '1'")
     private Integer active;
@@ -68,11 +71,11 @@ public class News {
         this.content = content;
     }
 
-    public String getPostDate() {
+    public Date getPostDate() {
         return postDate;
     }
 
-    public void setPostDate(String postDate) {
+    public void setPostDate(Date postDate) {
         this.postDate = postDate;
     }
 
@@ -98,5 +101,11 @@ public class News {
 
     public void setAdmin(User admin) {
         this.admin = admin;
+    }
+
+    public String getFormattedPostDate() {
+
+        DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        return format.format(this.postDate);
     }
 }

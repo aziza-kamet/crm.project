@@ -34,9 +34,6 @@
                 <li <c:if test="${fn:startsWith(url, '/groups')}">
                     class="active"
                 </c:if>> <a href="/groups"></i>Группы</a></li>
-                <li <c:if test="${fn:startsWith(url, '/news')}">
-                    class="active"
-                </c:if>> <a href="/news"></i>Новости</a></li>
             </ul>
         </c:when>
         <c:when test="${user.role.name.equals('teacher') or user.role.name.equals('student')}">

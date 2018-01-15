@@ -28,24 +28,6 @@ public class NewsController {
     @Autowired
     NewsBean newsBean;
 
-    @GetMapping("/news")
-    public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        if (!AuthChecker.isAuth(request.getSession(), response)) {
-            return null;
-        }
-
-        User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
-            response.sendRedirect("403");
-            return null;
-        }
-        ModelAndView mv = new ModelAndView("news");
-        List<News> news = newsBean.getListOf(user);
-        mv.addObject("news", news);
-        return mv;
-    }
-
     @PostMapping("/news")
     public void create(HttpServletRequest request, HttpServletResponse response,
                        @RequestParam(name = "title") String title,
@@ -58,7 +40,7 @@ public class NewsController {
 //      TODO check if user is admin
         User user = (User) request.getSession().getAttribute("user");
         newsBean.create(user, title, content);
-        response.sendRedirect("/news");
+        response.sendRedirect("/");
     }
 
     @PostMapping("/news/{id}")
@@ -70,7 +52,7 @@ public class NewsController {
         }
 
         newsBean.delete(id);
-        response.sendRedirect("/news");
+        response.sendRedirect("/");
     }
 
     @PostMapping("/news/{id}/edit")
@@ -84,7 +66,7 @@ public class NewsController {
         }
 
         newsBean.update(id, title, content);
-        response.sendRedirect("/news");
+        response.sendRedirect("/");
     }
 
     @GetMapping("/")
