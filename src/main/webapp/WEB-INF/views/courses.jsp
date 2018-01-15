@@ -108,7 +108,7 @@
                     </div>
                     <div class="form-group">
                         <label>Описание</label>
-                        <input type="text" placeholder="Описание" class="form-control" name="description">
+                        <textarea placeholder="Описание" class="form-control" name="description"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -135,7 +135,7 @@
                     </div>
                     <div class="form-group">
                         <label>Описание</label>
-                        <input type="text" placeholder="Описание" class="form-control js-description" name="description">
+                        <textarea class="form-control js-description" name="description"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

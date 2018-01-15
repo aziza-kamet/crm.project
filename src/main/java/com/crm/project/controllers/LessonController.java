@@ -77,6 +77,7 @@ public class LessonController {
 
         mv.addObject("lessons", course.getLessons());
         mv.addObject("cid", cid);
+        mv.addObject("course", course);
         return mv;
     }
 

@@ -22,7 +22,7 @@
             <!-- Page Header-->
             <header class="page-header">
                 <div class="container-fluid">
-                    <h2 class="no-margin-bottom">Уроки</h2>
+                    <h2 class="no-margin-bottom">Уроки ${course.name}</h2>
                 </div>
             </header>
             <section class="no-padding-bottom">
