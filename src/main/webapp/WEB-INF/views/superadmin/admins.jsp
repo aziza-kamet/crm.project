@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: aziza
@@ -17,7 +18,7 @@
     <jsp:include page="../partials/superadmin/menu.jsp"/>
     <div class="page-content d-flex align-items-stretch">
         <jsp:include page="../partials/superadmin/side_menu.jsp"/>
-        <div class="content-inner">
+        <tags:inner>
             <!-- Page Header-->
             <header class="page-header">
                 <div class="container-fluid">
@@ -81,7 +82,7 @@
                     </div>
                 </div>
             </section>
-        </div>
+        </tags:inner>
     </div>
 </div>
 </body>

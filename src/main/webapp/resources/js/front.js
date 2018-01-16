@@ -60,24 +60,15 @@ $(document).ready(function () {
     // ------------------------------------------------------ //
     $('#toggle-btn').on('click', function (e) {
         e.preventDefault();
-        $(this).toggleClass('active');
 
-        $('.side-navbar').toggleClass('shrinked');
-        $('.content-inner').toggleClass('active');
+        toggleSidebar($(this));
 
-        if ($(window).outerWidth() > 1183) {
-            if ($('#toggle-btn').hasClass('active')) {
-                $('.navbar-header .brand-small').hide();
-                $('.navbar-header .brand-big').show();
-            } else {
-                $('.navbar-header .brand-small').show();
-                $('.navbar-header .brand-big').hide();
-            }
+        if (!$(this).hasClass('active')) {
+            setCookie("menu_shrinked", true, 365);
+            return;
         }
 
-        if ($(window).outerWidth() < 1183) {
-            $('.navbar-header .brand-small').show();
-        }
+        setCookie("menu_shrinked", false, 365);
     });
 
     // ------------------------------------------------------- //
@@ -134,3 +125,37 @@ $(document).ready(function () {
     });    
 
 });
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires;
+}
+function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+function toggleSidebar(element) {
+    element.toggleClass('active');
+
+    $('.side-navbar').toggleClass('shrinked');
+    $('.content-inner').toggleClass('active');
+    $('.sidebar-li-text').toggle();
+
+    if ($(window).outerWidth() > 1183) {
+        if ($('#toggle-btn').hasClass('active')) {
+            $('.navbar-header .brand-small').hide();
+            $('.navbar-header .brand-big').show();
+        } else {
+            $('.navbar-header .brand-small').show();
+            $('.navbar-header .brand-big').hide();
+        }
+    }
+
+    if ($(window).outerWidth() < 1183) {
+        $('.navbar-header .brand-small').show();
+    }
+}

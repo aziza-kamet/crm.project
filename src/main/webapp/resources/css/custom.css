@@ -35,3 +35,15 @@ section {
 .c-gray {
     color: #606060;
 }
+
+nav.side-navbar ul {
+    padding: 0;
+}
+
+.nav-item form {
+    margin-bottom: 0;
+}
+
+.__hidden {
+    display: none;
+}

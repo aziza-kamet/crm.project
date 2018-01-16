@@ -9,7 +9,9 @@
                     <!-- Navbar Brand --><a href="/superadmin" class="navbar-brand">
                     <div class="brand-text brand-big"><span>CRM </span><strong>Админ</strong></div>
                     <div class="brand-text brand-small">CRM</div></a>
-                    <!-- Toggle Button--><a id="toggle-btn" href="#" class="menu-btn active"><span></span><span></span><span></span></a>
+                    <!-- Toggle Button--><a id="toggle-btn" href="#" class="menu-btn <c:if test="${cookie.menu_shrinked.value != 'true'}">
+                        active
+                    </c:if>"><span></span><span></span><span></span></a>
                 </div>
                 <!-- Navbar Menu -->
                 <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
