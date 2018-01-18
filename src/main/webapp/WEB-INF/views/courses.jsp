@@ -23,7 +23,18 @@
             <!-- Page Header-->
             <header class="page-header">
                 <div class="container-fluid">
-                    <h2 class="no-margin-bottom">Курсы</h2>
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <h2 class="no-margin-bottom">Курсы</h2>
+                        </div>
+                        <c:if test="${user.role.name.equals('admin')}">
+                            <div class="col-sm-1">
+                                <h2>
+                                    <a href="#" class="pull-right" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
+                                </h2>
+                            </div>
+                        </c:if>
+                    </div>
                 </div>
             </header>
             <section class="no-padding-bottom">
@@ -31,16 +42,6 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
-                                <c:if test="${user.role.name.equals('admin')}">
-                                    <div class="card-close">
-                                        <div class="dropdown">
-                                            <a href="#" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
-                                        </div>
-                                    </div>
-                                </c:if>
-                                <div class="card-header d-flex align-items-center">
-                                    &nbsp;
-                                </div>
                                 <div class="card-body">
                                     <table class="table table-striped">
                                         <thead>
@@ -59,23 +60,23 @@
                                             <tr>
                                                 <td>${course.name}</td>
                                                 <td>${course.description}</td>
+                                                <td>
+                                                    <a href="/courses/${course.id}/lessons">Уроки</a>
+                                                </td>
                                                 <c:if test="${user.role.name.equals('admin')}">
+                                                    <td>
+                                                        <a href="#" data-toggle="modal" data-target="#edit-modal"
+                                                           data-action="/courses/${course.id}/edit" data-name="${course.name}"
+                                                           data-description="${course.description}">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </a>
+                                                    </td>
                                                     <td>
                                                         <form action="/courses/${course.id}" method="post">
                                                             <button class="btn btn-link"><i class="fa fa-remove"></i></button>
                                                         </form>
                                                     </td>
-                                                    <td>
-                                                        <a href="#" data-toggle="modal" data-target="#edit-modal"
-                                                           data-action="/courses/${course.id}/edit" data-name="${course.name}"
-                                                           data-description="${course.description}">
-                                                            <i class="fa fa-edit"></i>
-                                                        </a>
-                                                    </td>
                                                 </c:if>
-                                                <td>
-                                                    <a href="/courses/${course.id}/lessons">Уроки</a>
-                                                </td>
                                             </tr>
                                         </c:forEach>
                                         </tbody>

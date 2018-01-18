@@ -14,8 +14,9 @@
         </div>
         <div class="title">
             <a href="/profile">
-                ${user.name} ${user.surname}
+                <h1 class="h4">${user.name} ${user.surname}</h1>
             </a>
+            <p>${user.role.name}</p>
         </div>
     </div>
     <c:set var="url" value="${requestScope['javax.servlet.forward.request_uri']}"/>

@@ -498,6 +498,7 @@ nav.side-navbar.shrinked a[data-toggle="collapse"][aria-expanded="true"]::before
 nav.side-navbar.shrinked a:hover {
   color: #fff;
   border: none;
+  background-color: #0288D1;
 }
 
 nav.side-navbar.shrinked a:hover i {
@@ -1040,7 +1041,7 @@ section.dashboard-counts div[class*='col-']:last-of-type .item {
 }
 
 .project div[class*='col-'] {
-  border-right: 1px solid #eee;
+  /*border-right: 1px solid #eee;*/
 }
 
 .project .text h3 {

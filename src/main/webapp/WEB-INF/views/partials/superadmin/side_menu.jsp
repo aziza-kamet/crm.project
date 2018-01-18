@@ -6,8 +6,15 @@
 </c:if>">
     <!-- Sidebar Header-->
     <div class="sidebar-header d-flex align-items-center">
+        <div class="avatar">
+            <a href="/profile" class="__no-padding">
+                <img src="<c:url value="/resources/images/user.png"/>" class="img-fluid rounded-circle">
+            </a>
+        </div>
         <div class="title">
-            <h1>${user.login}</h1>
+            <a href="/profile">
+                <h1 class="h4">${user.login}</h1>
+            </a>
         </div>
     </div>
     <!-- Sidebar Navidation Menus-->

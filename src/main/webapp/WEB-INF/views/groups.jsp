@@ -23,26 +23,70 @@
             <!-- Page Header-->
             <header class="page-header">
                 <div class="container-fluid">
-                    <h2 class="no-margin-bottom">Группы</h2>
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <h2 class="no-margin-bottom">Группы</h2>
+                        </div>
+                        <c:if test="${user.role.name.equals('admin')}">
+                            <div class="col-sm-1">
+                                <h2>
+                                    <a href="#" class="pull-right" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
+                                </h2>
+                            </div>
+                        </c:if>
+                    </div>
                 </div>
             </header>
             <section class="no-padding-bottom">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="card">
-                                <c:if test="${user.role.name.equals('admin')}">
-                                    <div class="card-close">
-                                        <div class="dropdown">
-                                            <a href="#" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
-                                        </div>
+                            <c:forEach items="${groups}" var="group">
+                                <div class="project position-relative">
+                                    <div class="tools-right">
+                                        <form action="/groups/${group.id}" method="post" class="no-margin">
+                                            <button class="btn btn-link no-padding"><i class="fa fa-remove"></i></button>
+                                        </form>
+                                        <a href="#" data-toggle="modal" data-target="#edit-modal"
+                                           data-action="/groups/${group.id}/edit" data-name="${group.name}">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
                                     </div>
-                                </c:if>
-                                <div class="card-header d-flex align-items-center">
-                                    &nbsp;
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-striped">
+                                    <div class="row bg-white has-shadow">
+                                        <div class="col-sm-2 d-flex align-items-center">
+                                            <h1>${group.name}</h1>
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <%--<div class="d-flex justify-content-start align-content-center">--%>
+                                            <div class="row no-padding no-margin-bottom horizontal-list">
+                                                <c:forEach items="${group.courses}" var="course">
+                                                    <div class="col-sm-2">
+                                                        <span class="badge badge-info badge-lg position-relative">
+                                                            <div class="tools-right tools-small">
+                                                                <form action="/groups/${group.id}/courses/${course.id}" method="post" class="no-margin">
+                                                                    <button class="btn btn-link no-padding"><i class="fa fa-remove"></i></button>
+                                                                </form>
+                                                            </div>
+                                                            ${course.name}
+                                                        </span>
+                                                    </div>
+                                                </c:forEach>
+                                                <div class="col-sm-2">
+                                                    <span class="badge badge-info badge-lg position-relative">
+                                                        <a href="#" data-toggle="modal" data-target="#add-course-modal"
+                                                           data-action="/groups/${group.id}/courses" data-gid="${group.id}">
+                                                            <i class="fa fa-plus"></i>
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 d-flex align-items-center justify-content-end tools-horizontal">
+                                            <a href="/groups/${group.id}/schedule"><h1><i class="fa fa-calendar"></i></h1></a>
+                                            <a href="/groups/${group.id}/students"><h1><i class="fa fa-user"></i></h1></a>
+                                            <a href="/groups/${group.id}/teachers"><h1><i class="fa fa-graduation-cap"></i></h1></a>
+                                        </div>
+                                    <%--<table class="table table-striped">
                                         <thead>
                                         <tr>
                                             <th>Название</th>
@@ -90,9 +134,10 @@
                                             </tr>
                                         </c:forEach>
                                         </tbody>
-                                    </table>
+                                    </table>--%>
                                 </div>
                             </div>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>
@@ -147,6 +192,19 @@
         </div>
     </div>
 </div>
+
+<div id="add-course-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Добавить курс</h4>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div id="courses-out"></div>
+        </div>
+    </div>
+</div>
+
 <jsp:include page="partials/footer.jsp"/>
 
 <script>
@@ -158,7 +216,21 @@
         modal.find('form').attr("action", action);
         modal.find('form').attr("method", "post");
         modal.find('.js-name').val(name);
-    })
+    });
+    $('#add-course-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var action = button.attr('data-action');
+        var gid = button.attr('data-gid');
+        var modal = $(this);
+
+        $.ajax({
+            type: 'get',
+            url: '/groups/' + gid + '/courses/out',
+            success: function (data) {
+                $('#courses-out').html(data);
+            }
+        });
+    });
 </script>
 
 </html>

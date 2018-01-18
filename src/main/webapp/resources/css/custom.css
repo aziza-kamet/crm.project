@@ -79,3 +79,56 @@ td form button {
 .btn-link {
     color: #03A9F4;
 }
+
+.horizontal-list div[class*='col-'] {
+    padding: 0.5rem 0;
+}
+
+.badge-lg {
+    padding: 0.8rem 1rem;
+    font-size: 100%;
+    background-color: #eee;
+    color: #888;
+}
+
+.project .row div[class*='col-']:last-child {
+    padding-right: 3rem;
+}
+
+.tools-right {
+    position: absolute;
+    right: 1%;
+    bottom: 10%;
+    top: 10%;
+    z-index: 100;
+}
+
+.tools-right.tools-small {
+    right: 3%;
+    bottom: 5%;
+    top: 5%;
+}
+
+.tools-right a,
+.tools-right form button {
+    color: #B3E5FC;
+}
+
+.tools-right.tools-small form button i {
+    font-size: 0.65rem;
+}
+
+.tools-right a:hover,
+.tools-right form button:hover {
+    color: #29B6F6;
+}
+
+.tools-right a {
+    position: absolute;
+    bottom: 0;
+}
+
+.tools-horizontal a {
+    padding: 0.8rem 1rem;
+    font-size: 100%;
+}

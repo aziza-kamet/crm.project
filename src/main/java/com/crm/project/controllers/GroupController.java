@@ -10,10 +10,7 @@ import com.crm.project.dao.User;
 import com.crm.project.helpers.AuthChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -230,6 +227,24 @@ public class GroupController {
         return mv;
     }
 
+    @GetMapping("/groups/{id}/courses/out")
+    public @ResponseBody ModelAndView coursesOut(HttpServletRequest request, HttpServletResponse response,
+                            @PathVariable(name = "id") Long id) throws IOException {
+
+        ModelAndView mv = new ModelAndView("group_courses");
+        User user = (User) request.getSession().getAttribute("user");
+        if (!user.getRole().getName().equals("admin")) {
+            response.sendRedirect("403");
+            return null;
+        }
+        Group group = groupBean.getBy(id);
+        Company company = companyBean.getBy(user.getCompany().getId());
+
+        mv.addObject("coursesOut", groupBean.coursesOut(company, group));
+        mv.addObject("gid", id);
+        return mv;
+    }
+
     @PostMapping("/groups/{id}/courses")
     public void addCourses(HttpServletRequest request, HttpServletResponse response,
                             @PathVariable(name = "id") Long id,
@@ -250,7 +265,7 @@ public class GroupController {
         }
         groupBean.update(group);
 
-        response.sendRedirect("/groups/" + id + "/courses");
+        response.sendRedirect("/groups");
     }
 
     @PostMapping("/groups/{gid}/courses/{cid}")
@@ -266,7 +281,7 @@ public class GroupController {
         group.getCourses().remove(courseBean.getBy(cid));
         groupBean.update(group);
 
-        response.sendRedirect("/groups/" + gid + "/courses");
+        response.sendRedirect("/groups");
     }
 
     @GetMapping("/my_groups")

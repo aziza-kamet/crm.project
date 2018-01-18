@@ -279,14 +279,32 @@ public class GroupBean {
 
             CriteriaQuery<Course> criteriaQuery = builder.createQuery(Course.class);
             Root<Course> coursesTable = criteriaQuery.from(Course.class);
-            Join<Course, GroupCourse> groupCourseJoin = coursesTable.join("groupCourses", JoinType.LEFT);
-            Predicate companyPredicate = builder.equal(coursesTable.get("company"), company);
-            Predicate outPredicate = groupCourseJoin.isNull();
-            Predicate othersPredicate = builder.notEqual(groupCourseJoin.get("group"), group);
-            Predicate orPredicate = builder.or(outPredicate, othersPredicate);
-            Predicate activePredicate = builder.equal(coursesTable.get("active"), 1);
+
+            Subquery<Long> sub = criteriaQuery.subquery(Long.class);
+            Root<GroupCourse> groupCoursesTable = sub.from(GroupCourse.class);
+            Join<GroupCourse, Course> courseJoin = groupCoursesTable.join("course", JoinType.LEFT);
+            Predicate groupPredicate = builder.equal(groupCoursesTable.get("group"), group);
+            sub.select(courseJoin.<Long>get("id"));
+            sub.where(groupPredicate);
+
+            Predicate coursePredicates[] = {
+                    builder.equal(coursesTable.get("company"), company),
+                    builder.equal(coursesTable.get("active"), 1),
+                    coursesTable.get("id").in(sub).not()
+            };
+
             criteriaQuery.select(coursesTable);
-            criteriaQuery.where(builder.and(companyPredicate, orPredicate, activePredicate));
+            criteriaQuery.where(coursePredicates);
+
+//            Root<Course> coursesTable = criteriaQuery.from(Course.class);
+//            Join<Course, GroupCourse> groupCourseJoin = coursesTable.join("groupCourses", JoinType.LEFT);
+//            Predicate companyPredicate = builder.equal(coursesTable.get("company"), company);
+//            Predicate outPredicate = groupCourseJoin.isNull();
+//            Predicate othersPredicate = builder.notEqual(groupCourseJoin.get("group"), group);
+//            Predicate orPredicate = builder.or(outPredicate, othersPredicate);
+//            Predicate activePredicate = builder.equal(coursesTable.get("active"), 1);
+//            criteriaQuery.select(coursesTable);
+//            criteriaQuery.where(builder.and(companyPredicate, orPredicate, activePredicate));
 
             Query query = session.createQuery(criteriaQuery);
 
