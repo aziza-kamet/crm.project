@@ -442,17 +442,14 @@ nav.side-navbar ul a {
 }
 
 nav.side-navbar ul a:hover {
-  background: #03A9F4;
-  border-left: 4px solid #0288D1;
-  color: #fff;
+  /*border-left: 1rem solid #0288D1;*/
+  border-left: 1rem solid #EEF5F9;
 }
 
-nav.side-navbar ul li.active a {
-  background: #EEF5F9;
-}
-
+nav.side-navbar ul li.active a,
 nav.side-navbar ul li.active a:hover {
-  background: #03A9F4;
+  background: #EEF5F9;
+  border-left: 4px solid transparent;
 }
 
 nav.side-navbar ul ul {
@@ -589,7 +586,7 @@ nav.side-navbar.shrinked .sidebar-header .title {
 * ==========================================================
 */
 nav.navbar {
-  background: #0288D1;
+  background: #313E4E;
   padding-top: 15px;
   padding-bottom: 15px;
   color: #fff;

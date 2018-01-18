@@ -2,6 +2,14 @@ section {
     height: 100%;
 }
 
+.table th {
+    border-top: none;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(238,245,249, 0.5);
+}
+
 .login-page .form-holder {
     width: 50%;
 }
@@ -46,4 +54,28 @@ nav.side-navbar ul {
 
 .__hidden {
     display: none;
+}
+
+.news-card {
+    padding: 2rem;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.items-center form {
+    margin-bottom: 0;
+}
+
+.__no-padding {
+    padding: 0 !important;
+}
+
+td form button {
+    padding: 0 !important;
+}
+
+.btn-link {
+    color: #03A9F4;
 }

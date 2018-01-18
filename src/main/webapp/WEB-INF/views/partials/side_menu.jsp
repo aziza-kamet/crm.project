@@ -7,12 +7,15 @@
 </c:if>">
     <!-- Sidebar Header-->
     <div class="sidebar-header d-flex align-items-center">
+        <div class="avatar">
+            <a href="/profile" class="__no-padding">
+                <img src="<c:url value="/resources/images/user.png"/>" class="img-fluid rounded-circle">
+            </a>
+        </div>
         <div class="title">
-            <h1>
-                <a href="/profile">
-                    ${user.name} ${user.surname}
-                </a>
-            </h1>
+            <a href="/profile">
+                ${user.name} ${user.surname}
+            </a>
         </div>
     </div>
     <c:set var="url" value="${requestScope['javax.servlet.forward.request_uri']}"/>

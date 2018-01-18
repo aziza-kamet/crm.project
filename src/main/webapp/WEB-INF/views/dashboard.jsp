@@ -22,14 +22,19 @@
             <!-- Page Header-->
             <header class="page-header">
                 <div class="container-fluid">
-                    <h2 class="no-margin-bottom">Новости</h2>
-                    <c:if test="${user.role.name.equals('admin')}">
-                        <div class="card-close">
-                            <div class="dropdown">
-                                <a href="#" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
-                            </div>
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <h2 class="no-margin-bottom">Новости</h2>
                         </div>
-                    </c:if>
+                        <c:if test="${user.role.name.equals('admin')}">
+                        <div class="col-sm-1">
+                            <h2>
+                                <a href="#" class="pull-right" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
+                            </h2>
+                        </div>
+                        </c:if>
+                    </div>
+                </div>
             </header>
             <section class="no-padding-bottom">
                 <div class="content-fluid">
@@ -37,17 +42,19 @@
                         <div class="row">
                             <!-- Page Header-->
                             <div class="col-lg-10 offset-1">
-                                <div class="card">
-                                    <div class="card-close">
-                                        <form action="/news/${post.id}" method="post">
-                                            <button class="btn btn-link"><i class="fa fa-remove"></i></button>
-                                        </form>
+                                <div class="card news-card">
+                                    <c:if test="${user.role.name.equals('admin')}">
+                                    <div class="card-close d-flex items-center">
                                         <a href="#" data-toggle="modal" data-target="#edit-modal"
                                            data-action="/news/${post.id}/edit" data-title="${post.title}"
                                            data-content="${post.content}">
-                                            <i class="fa fa-edit"></i>
+                                            <i class="fa fa-pencil"></i>
                                         </a>
+                                        <form action="/news/${post.id}" method="post">
+                                            <button class="btn btn-link"><i class="fa fa-remove"></i></button>
+                                        </form>
                                     </div>
+                                    </c:if>
                                     <div class="card-body">
                                         <h3>${post.title}</h3>
                                         <p>${post.content}</p>

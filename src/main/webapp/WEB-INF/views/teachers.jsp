@@ -23,7 +23,18 @@
             <!-- Page Header-->
             <header class="page-header">
                 <div class="container-fluid">
-                    <h2 class="no-margin-bottom">Учителя</h2>
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <h2 class="no-margin-bottom">Учителя</h2>
+                        </div>
+                        <c:if test="${user.role.name.equals('admin')}">
+                            <div class="col-sm-1">
+                                <h2>
+                                    <a href="#" class="pull-right" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
+                                </h2>
+                            </div>
+                        </c:if>
+                    </div>
                 </div>
             </header>
             <section class="no-padding-bottom">
@@ -31,14 +42,6 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
-                                <div class="card-close">
-                                    <div class="dropdown">
-                                        <a href="#" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
-                                    </div>
-                                </div>
-                                <div class="card-header d-flex align-items-center">
-                                    &nbsp;
-                                </div>
                                 <div class="card-body">
                                     <table class="table table-striped">
                                         <thead>
@@ -57,16 +60,16 @@
                                                 <td>${user.name}</td>
                                                 <td>${user.surname}</td>
                                                 <td>
-                                                    <form action="/teachers/${user.id}" method="post">
-                                                        <button class="btn btn-link"><i class="fa fa-remove"></i></button>
-                                                    </form>
-                                                </td>
-                                                <td>
                                                     <a href="#" data-toggle="modal" data-target="#edit-modal"
                                                        data-action="/teachers/${user.id}/edit" data-login="${user.login}"
                                                        data-name="${user.name}" data-surname="${user.surname}">
-                                                        <i class="fa fa-edit"></i>
+                                                        <i class="fa fa-pencil"></i>
                                                     </a>
+                                                </td>
+                                                <td>
+                                                    <form action="/teachers/${user.id}" method="post">
+                                                        <button class="btn btn-link"><i class="fa fa-remove"></i></button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                         </c:forEach>
