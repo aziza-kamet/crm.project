@@ -43,15 +43,17 @@
                         <div class="col-lg-12">
                             <c:forEach items="${groups}" var="group">
                                 <div class="project position-relative">
-                                    <div class="tools-right">
-                                        <form action="/groups/${group.id}" method="post" class="no-margin">
-                                            <button class="btn btn-link no-padding"><i class="fa fa-remove"></i></button>
-                                        </form>
-                                        <a href="#" data-toggle="modal" data-target="#edit-modal"
-                                           data-action="/groups/${group.id}/edit" data-name="${group.name}">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                    </div>
+                                    <c:if test="${user.role.name.equals('admin')}">
+                                        <div class="tools-right">
+                                            <form action="/groups/${group.id}" method="post" class="no-margin">
+                                                <button class="btn btn-link no-padding"><i class="fa fa-remove"></i></button>
+                                            </form>
+                                            <a href="#" data-toggle="modal" data-target="#edit-modal"
+                                               data-action="/groups/${group.id}/edit" data-name="${group.name}">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </c:if>
                                     <div class="row bg-white has-shadow">
                                         <div class="col-sm-2 d-flex align-items-center">
                                             <h1>${group.name}</h1>
@@ -62,23 +64,25 @@
                                                 <c:forEach items="${group.courses}" var="course">
                                                     <div class="col-sm-2">
                                                         <span class="badge badge-info badge-lg position-relative">
-                                                            <div class="tools-right tools-small">
-                                                                <form action="/groups/${group.id}/courses/${course.id}" method="post" class="no-margin">
-                                                                    <button class="btn btn-link no-padding"><i class="fa fa-remove"></i></button>
-                                                                </form>
-                                                            </div>
+                                                            <c:if test="${user.role.name.equals('admin')}">
+                                                                <div class="tools-right tools-small">
+                                                                    <form action="/groups/${group.id}/courses/${course.id}" method="post" class="no-margin">
+                                                                        <button class="btn btn-link no-padding"><i class="fa fa-remove"></i></button>
+                                                                    </form>
+                                                                </div>
+                                                            </c:if>
                                                             ${course.name}
                                                         </span>
                                                     </div>
                                                 </c:forEach>
-                                                <div class="col-sm-2">
-                                                    <span class="badge badge-info badge-lg position-relative">
-                                                        <a href="#" data-toggle="modal" data-target="#add-course-modal"
+                                                <c:if test="${user.role.name.equals('admin')}">
+                                                    <div class="col-sm-2">
+                                                        <a href="#" class="badge badge-info badge-lg position-relative" data-toggle="modal" data-target="#add-course-modal"
                                                            data-action="/groups/${group.id}/courses" data-gid="${group.id}">
                                                             <i class="fa fa-plus"></i>
                                                         </a>
-                                                    </span>
-                                                </div>
+                                                    </div>
+                                                </c:if>
                                             </div>
                                         </div>
                                         <div class="col-sm-3 d-flex align-items-center justify-content-end tools-horizontal">
@@ -86,57 +90,8 @@
                                             <a href="/groups/${group.id}/students"><h1><i class="fa fa-user"></i></h1></a>
                                             <a href="/groups/${group.id}/teachers"><h1><i class="fa fa-graduation-cap"></i></h1></a>
                                         </div>
-                                    <%--<table class="table table-striped">
-                                        <thead>
-                                        <tr>
-                                            <th>Название</th>
-                                            <th>Дата создания</th>
-                                            <c:if test="${user.role.name.equals('admin')}">
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                            </c:if>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach items="${groups}" var="group">
-                                            <tr>
-                                                <td>${group.name}</td>
-                                                <td>${group.createdDate}</td>
-                                                <c:if test="${user.role.name.equals('admin')}">
-                                                    <td>
-                                                        <form action="/groups/${group.id}" method="post">
-                                                            <button class="btn btn-link"><i class="fa fa-remove"></i></button>
-                                                        </form>
-                                                    </td>
-                                                    <td>
-                                                        <a href="#" data-toggle="modal" data-target="#edit-modal"
-                                                           data-action="/groups/${group.id}/edit" data-name="${group.name}">
-                                                            <i class="fa fa-edit"></i>
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <a href="/groups/${group.id}/courses">Курсы</a>
-                                                    </td>
-                                                    <td>
-                                                        <a href="/groups/${group.id}/schedule">Расписание</a>
-                                                    </td>
-                                                </c:if>
-                                                <td>
-                                                    <a href="/groups/${group.id}/students">Ученики</a>
-                                                </td>
-                                                <td>
-                                                    <a href="/groups/${group.id}/teachers">Учителя</a>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>--%>
+                                    </div>
                                 </div>
-                            </div>
                             </c:forEach>
                         </div>
                     </div>

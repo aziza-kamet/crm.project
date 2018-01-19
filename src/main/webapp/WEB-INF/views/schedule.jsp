@@ -23,7 +23,18 @@
             <!-- Page Header-->
             <header class="page-header">
                 <div class="container-fluid">
-                    <h2 class="no-margin-bottom">Расписание</h2>
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <h2 class="no-margin-bottom">Расписание</h2>
+                        </div>
+                        <c:if test="${user.role.name.equals('admin')}">
+                            <div class="col-sm-1">
+                                <h2>
+                                    <a href="#" class="pull-right" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
+                                </h2>
+                            </div>
+                        </c:if>
+                    </div>
                 </div>
             </header>
             <section class="no-padding-bottom">
@@ -31,18 +42,8 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
-                                <c:if test="${user.role.name.equals('admin')}">
-                                    <div class="card-close">
-                                        <div class="dropdown">
-                                            <a href="#" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
-                                        </div>
-                                    </div>
-                                </c:if>
-                                <div class="card-header d-flex align-items-center">
-                                    &nbsp;
-                                </div>
                                 <div class="card-body">
-                                    <table class="table table-striped">
+                                    <table class="table table-striped table-chess">
                                         <thead>
                                             <tr>
                                                 <th>Время</th>
@@ -60,27 +61,29 @@
                                             <tr>
                                                 <td>${hour.value}</td>
                                                 <c:forEach items="${days}" var="day">
-                                                    <td>
+                                                    <td align="center">
                                                         <c:set var="current_schedule" value="${schedule.get(hour.key).get(day.key)}"/>
-                                                        ${current_schedule.course.name}
                                                         <c:if test="${!(current_schedule.course eq null)}">
-                                                            <c:choose>
-                                                                <c:when test="${user.role.name.equals('admin')}">
-                                                                    <a href="#" data-toggle="modal" data-target="#edit-modal"
-                                                                       data-action="/groups/${gid}/schedule/${current_schedule.id}/edit" data-notes="${current_schedule.notes}"
-                                                                       data-day_id="${current_schedule.dayId}" data-hour_id="${current_schedule.hourId}"
-                                                                       data-group_id="${current_schedule.group.id}" data-course_id="${current_schedule.course.id}"
-                                                                       data-start_date="${current_schedule.startDateString}" data-end_date="${current_schedule.endDateString}">
-                                                                        <i class="fa fa-edit"></i>
-                                                                    </a>
-                                                                    <form action="/groups/${gid}/schedule/${current_schedule.id}" method="post">
-                                                                        <button class="btn btn-link"><i class="fa fa-remove"></i></button>
-                                                                    </form>
-                                                                </c:when>
-                                                                <c:otherwise>
+                                                            <span class="badge badge-info badge-lg position-relative">
+                                                                <c:if test="${user.role.name.equals('admin')}">
+                                                                    <div class="tools-right tools-small">
+                                                                        <form action="/groups/${gid}/schedule/${current_schedule.id}" method="post">
+                                                                            <button class="btn btn-link"><i class="fa fa-remove"></i></button>
+                                                                        </form>
+                                                                        <a href="#" data-toggle="modal" data-target="#edit-modal"
+                                                                           data-action="/groups/${gid}/schedule/${current_schedule.id}/edit" data-notes="${current_schedule.notes}"
+                                                                           data-day_id="${current_schedule.dayId}" data-hour_id="${current_schedule.hourId}"
+                                                                           data-group_id="${current_schedule.group.id}" data-course_id="${current_schedule.course.id}"
+                                                                           data-start_date="${current_schedule.startDateString}" data-end_date="${current_schedule.endDateString}">
+                                                                            <i class="fa fa-pencil"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </c:if>
+                                                                ${current_schedule.course.name}
+                                                                <c:if test="${user.role.name.equals('teacher')}">
                                                                     (${current_schedule.group.name})
-                                                                </c:otherwise>
-                                                            </c:choose>
+                                                                </c:if>
+                                                            </span>
                                                         </c:if>
                                                     </td>
                                                 </c:forEach>

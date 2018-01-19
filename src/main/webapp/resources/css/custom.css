@@ -10,6 +10,15 @@ section {
     background-color: rgba(238,245,249, 0.5);
 }
 
+.table-chess td:not(:last-child),
+.table-chess th:not(:last-child) {
+    border-right: 1px solid #e9ecef;
+}
+
+.table-chess th:not(:first-child) {
+    text-align: center;
+}
+
 .login-page .form-holder {
     width: 50%;
 }
@@ -114,7 +123,8 @@ td form button {
     color: #B3E5FC;
 }
 
-.tools-right.tools-small form button i {
+.tools-right.tools-small form button i,
+.tools-right.tools-small a i{
     font-size: 0.65rem;
 }
 
