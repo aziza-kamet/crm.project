@@ -5,6 +5,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by aziza on 03.11.17.
@@ -33,6 +34,10 @@ public class Lesson {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "lesson_id")
+    private List<LessonAttachment> attachments;
 
     public Lesson() {
     }
@@ -89,5 +94,13 @@ public class Lesson {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public List<LessonAttachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<LessonAttachment> attachments) {
+        this.attachments = attachments;
     }
 }

@@ -155,7 +155,7 @@ public class ScheduleController {
     }
 
     @PostMapping("/groups/{gid}/schedule/{sid}")
-    public void update(HttpServletRequest request, HttpServletResponse response,
+    public void delete(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable(name = "gid") Long gid,
                        @PathVariable(name = "sid") Long sid) throws IOException {
 

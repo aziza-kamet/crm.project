@@ -41,48 +41,75 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <table class="table table-striped">
-                                        <thead>
-                                        <tr>
-                                            <th>Название</th>
-                                            <th>Описание</th>
-                                            <c:if test="${user.role.name.equals('admin')}">
-                                                <th></th>
-                                                <th></th>
-                                            </c:if>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach items="${courses}" var="course">
-                                            <tr>
-                                                <td>${course.name}</td>
-                                                <td>${course.description}</td>
-                                                <td>
-                                                    <a href="/courses/${course.id}/lessons">Уроки</a>
-                                                </td>
-                                                <c:if test="${user.role.name.equals('admin')}">
-                                                    <td>
-                                                        <a href="#" data-toggle="modal" data-target="#edit-modal"
-                                                           data-action="/courses/${course.id}/edit" data-name="${course.name}"
-                                                           data-description="${course.description}">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <form action="/courses/${course.id}" method="post">
-                                                            <button class="btn btn-link"><i class="fa fa-remove"></i></button>
-                                                        </form>
-                                                    </td>
-                                                </c:if>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                                    <c:choose>
+                                            <c:when test="${user.role.name.equals('admin')}">
+                                        <div class="card">
+                                            <div class="card-body">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th>Название</th>
+                                                    <th>Описание</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <c:forEach items="${courses}" var="course">
+                                                    <tr>
+                                                        <td>${course.name}</td>
+                                                        <td>${course.description}</td>
+                                                        <td>
+                                                            <a href="/courses/${course.id}/lessons">Уроки</a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="#" data-toggle="modal" data-target="#edit-modal"
+                                                               data-action="/courses/${course.id}/edit" data-name="${course.name}"
+                                                               data-description="${course.description}">
+                                                                <i class="fa fa-pencil"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <form action="/courses/${course.id}" method="post">
+                                                                <button class="btn btn-link"><i class="fa fa-remove"></i></button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                                </tbody>
+                                            </table>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="accordion">
+                                                <c:forEach items="${courses}" var="course">
+                                                    <div class="card collapse-card">
+                                                        <div class="card-header" id="course-${course.id}">
+                                                            <h1 class="mb-0" data-toggle="collapse"
+                                                                data-target="#lessons-${course.id}" aria-expanded="true" aria-controls="collapseOne">
+                                                                ${course.name}
+                                                                <button class="btn btn-link pull-right">
+                                                                    <i class="fa fa-chevron-down"></i>
+                                                                </button>
+                                                            </h1>
+                                                        </div>
+
+                                                        <div id="lessons-${course.id}" class="collapse" aria-labelledby="course-${course.id}" data-parent="#accordion">
+                                                            <div class="card-body">
+                                                                <div class="list-group">
+                                                                    <c:forEach items="${course.lessons}" var="lesson">
+                                                                        <a href="/courses/${course.id}/lessons/${lesson.id}" class="list-group-item list-group-item-action border-0">${lesson.title}</a>
+                                                                    </c:forEach>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
+                                            </div>
+                                            </div>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                         </div>
                     </div>
                 </div>

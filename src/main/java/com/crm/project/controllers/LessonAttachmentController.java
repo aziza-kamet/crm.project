@@ -1,6 +1,8 @@
 package com.crm.project.controllers;
 
 import com.crm.project.beans.LessonAttachmentBean;
+import com.crm.project.beans.LessonBean;
+import com.crm.project.dao.Lesson;
 import com.crm.project.dao.LessonAttachment;
 import com.crm.project.dao.User;
 import com.crm.project.helpers.AuthChecker;
@@ -30,6 +32,8 @@ import java.util.List;
 public class LessonAttachmentController {
     @Autowired
     LessonAttachmentBean attachmentBean;
+    @Autowired
+    LessonBean lessonBean;
 
     @GetMapping("/lessons/{lid}/attachments")
     public ModelAndView auth(HttpServletRequest request, HttpServletResponse response,
@@ -57,6 +61,7 @@ public class LessonAttachmentController {
             return;
         }
 
+        Lesson lesson = lessonBean.getBy(lid);
 
         try {
             User user = (User) request.getSession().getAttribute("user");
@@ -64,7 +69,7 @@ public class LessonAttachmentController {
         } catch (MaxUploadSizeExceededException e) {
             e.printStackTrace();
         }
-        response.sendRedirect("/lessons/" + lid + "/attachments");
+        response.sendRedirect("/courses/" + lesson.getCourse().getId() + "/lessons/" + lid);
     }
 
     @GetMapping("/attachments/{id}/download")
@@ -98,9 +103,10 @@ public class LessonAttachmentController {
             return;
         }
 
-
         LessonAttachment attachment = attachmentBean.getBy(id);
+        Lesson lesson = attachment.getLesson();
+
         attachmentBean.delete(id);
-        response.sendRedirect("/lessons/" + attachment.getLesson().getId() + "/attachments");
+        response.sendRedirect("/courses/" + lesson.getCourse().getId() + "/lessons/" + lesson.getId());
     }
 }

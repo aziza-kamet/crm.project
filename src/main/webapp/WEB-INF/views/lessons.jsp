@@ -23,81 +23,59 @@
             <!-- Page Header-->
             <header class="page-header">
                 <div class="container-fluid">
-                    <h2 class="no-margin-bottom">Уроки ${course.name}</h2>
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <h2 class="no-margin-bottom">Уроки ${course.name}</h2>
+                        </div>
+                        <c:if test="${user.role.name.equals('admin')}">
+                            <div class="col-sm-1">
+                                <h2>
+                                    <a href="#" class="pull-right" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
+                                </h2>
+                            </div>
+                        </c:if>
+                    </div>
                 </div>
             </header>
             <section class="no-padding-bottom">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="card">
-                                <c:if test="${user.role.name.equals('admin')}">
-                                    <div class="card-close">
-                                        <div class="dropdown">
-                                            <a href="#" data-toggle="modal" data-target="#add-modal"><i class="fa fa-plus"></i></a>
+                            <c:forEach items="${lessons}" var="lesson">
+                                <div class="row">
+                                    <!-- Page Header-->
+                                    <div class="col-lg-10 offset-1">
+                                        <div class="card news-card">
+                                            <div class="card-close d-flex items-center">
+                                                <a href="#" data-toggle="modal" data-target="#edit-modal"
+                                                    data-action="/courses/${cid}/lessons/${lesson.id}/edit" data-title="${lesson.title}"
+                                                    data-content="${lesson.content}">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                                <form action="/courses/${cid}/lessons/${lesson.id}" method="post">
+                                                    <button class="btn btn-link"><i class="fa fa-remove"></i></button>
+                                                </form>
+                                            </div>
+                                            <div class="card-body">
+                                                <h3>${lesson.title}</h3>
+                                                <p>${lesson.content}</p>
+                                                <div class="date pull-right"><small class="text-info">${lesson.postDate}</small></div>
+                                            </div>
+                                            <div class="row no-padding no-margin-bottom">
+                                                <c:forEach items="${lesson.attachments}" var="attachment">
+                                                    <div class="col-sm-2">
+                                                        <a href="/attachments/${attachment.id}/download" target="_blank"
+                                                           class="badge badge-info badge-lg position-relative">
+                                                            <i class="fa fa-file"></i>
+                                                                ${attachment.name}
+                                                        </a>
+                                                    </div>
+                                                </c:forEach>
+                                            </div>
                                         </div>
                                     </div>
-                                </c:if>
-                                <div class="card-header d-flex align-items-center">
-                                    &nbsp;
                                 </div>
-                                <div class="card-body">
-                                    <table class="table table-striped">
-                                        <thead>
-                                        <tr>
-                                            <th>Название</th>
-                                            <th>Содержание</th>
-                                            <th>Дата добавления(?)</th>
-                                            <c:if test="${user.role.name.equals('admin')}">
-                                                <th></th>
-                                                <th></th>
-                                            </c:if>
-                                            <c:if test="${user.role.name.equals('teacher')}">
-                                                <th>Группы</th>
-                                            </c:if>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach items="${lessons}" var="lesson">
-                                            <tr>
-                                                <td>${lesson.title}</td>
-                                                <td>${lesson.content}</td>
-                                                <td>${lesson.postDate}</td>
-                                                <c:if test="${user.role.name.equals('admin')}">
-                                                    <td>
-                                                        <form action="/courses/${cid}/lessons/${lesson.id}" method="post">
-                                                            <button class="btn btn-link"><i class="fa fa-remove"></i></button>
-                                                        </form>
-                                                    </td>
-                                                    <td>
-                                                        <a href="#" data-toggle="modal" data-target="#edit-modal"
-                                                           data-action="/courses/${cid}/lessons/${lesson.id}/edit" data-title="${lesson.title}"
-                                                           data-content="${lesson.content}">
-                                                            <i class="fa fa-edit"></i>
-                                                        </a>
-                                                    </td>
-                                                </c:if>
-                                                <c:if test="${user.role.name.equals('teacher')}">
-                                                    <td>
-                                                        <c:forEach items="${groups}" var="group">
-                                                            <a href="/lessons/${lesson.id}/groups/${group.id}/grades">
-                                                                ${group.name} <br>
-                                                            </a>
-                                                        </c:forEach>
-                                                    </td>
-                                                </c:if>
-                                                <td>
-                                                    <a href="/lessons/${lesson.id}/attachments">
-                                                        Прикрепления
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>

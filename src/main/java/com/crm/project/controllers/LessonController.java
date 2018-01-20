@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by aziza on 29.11.17.
@@ -33,6 +34,8 @@ public class LessonController {
     UserBean userBean;
     @Autowired
     MarkBean markBean;
+    @Autowired
+    LessonAttachmentBean attachmentBean;
     @Autowired
     AttendanceBean attendanceBean;
 
@@ -56,8 +59,7 @@ public class LessonController {
 
         HttpSession session = request.getSession();
         if (!AuthChecker.isAuth(request.getSession(), response)) {
-            session.invalidate();
-            return new ModelAndView("auth");
+            return null;
         }
 
         ModelAndView mv = new ModelAndView("lessons");
@@ -79,6 +81,46 @@ public class LessonController {
         mv.addObject("cid", cid);
         mv.addObject("course", course);
         return mv;
+    }
+
+    @GetMapping("/courses/{cid}/lessons/{lid}")
+    public ModelAndView show(HttpServletRequest request, HttpServletResponse response,
+                              @PathVariable(name = "cid") Long cid,
+                              @PathVariable(name = "lid") Long lid) throws IOException {
+
+        HttpSession session = request.getSession();
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
+        ModelAndView mv = new ModelAndView("lesson");
+        Course course = courseBean.getBy(cid);
+        User user = (User) request.getSession().getAttribute("user");
+        List<LessonAttachment> attachments = attachmentBean.getList(lid);
+
+        if (user.getRole().getName().equals("admin") || !userBean.hasCourse(user, cid)) {
+            response.sendRedirect("403");
+            return null;
+        }
+
+        mv.addObject("attachments", attachments);
+        mv.addObject("groups", courseBean.groups(course, user));
+        mv.addObject("lesson", lessonBean.getBy(lid));
+        mv.addObject("cid", cid);
+        return mv;
+    }
+
+    @PostMapping("courses/{cid}/lessons/{lid}")
+    public void delete(HttpServletRequest request, HttpServletResponse response,
+                       @PathVariable(name = "lid") Long lid,
+                       @PathVariable(name = "cid") Long cid) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
+        lessonBean.delete(lid);
+        response.sendRedirect("/courses/" + cid + "/lessons");
     }
 
     @PostMapping("courses/{cid}/lessons/{lid}/edit")

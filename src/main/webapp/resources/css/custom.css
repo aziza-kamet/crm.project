@@ -69,6 +69,10 @@ nav.side-navbar ul {
     padding: 2rem;
 }
 
+.collapse-card {
+    margin-bottom: 0;
+}
+
 .items-center {
     align-items: center;
 }

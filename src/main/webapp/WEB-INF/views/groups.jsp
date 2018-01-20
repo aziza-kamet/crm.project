@@ -86,7 +86,9 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-3 d-flex align-items-center justify-content-end tools-horizontal">
-                                            <a href="/groups/${group.id}/schedule"><h1><i class="fa fa-calendar"></i></h1></a>
+                                            <c:if test="${user.role.name.equals('admin')}">
+                                                <a href="/groups/${group.id}/schedule"><h1><i class="fa fa-calendar"></i></h1></a>
+                                            </c:if>
                                             <a href="/groups/${group.id}/students"><h1><i class="fa fa-user"></i></h1></a>
                                             <a href="/groups/${group.id}/teachers"><h1><i class="fa fa-graduation-cap"></i></h1></a>
                                         </div>
