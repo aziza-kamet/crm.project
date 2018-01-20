@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by aziza on 29.11.17.
@@ -156,10 +157,13 @@ public class LessonController {
         Lesson lesson = lessonBean.getBy(lid);
         Group group = groupBean.getBy(gid);
 
+        Map<Long, Double> avgMarks = lessonBean.avgMarks(lesson);
+
         mv.addObject("lesson", lesson);
         mv.addObject("group", group);
         mv.addObject("students", groupBean.students(group));
-        mv.addObject("marks", markBean.getList(lesson));
+        mv.addObject("marks", markBean.getMap(lesson));
+        mv.addObject("avgMarks", avgMarks);
         return mv;
     }
 
@@ -182,11 +186,10 @@ public class LessonController {
         Lesson lesson = lessonBean.getBy(lid);
         Group group = groupBean.getBy(gid);
 
-        System.out.println(attendanceBean.getList(lesson));
         mv.addObject("lesson", lesson);
         mv.addObject("group", group);
         mv.addObject("students", groupBean.students(group));
-        mv.addObject("attendances", attendanceBean.getList(lesson));
+        mv.addObject("attendances", attendanceBean.getMap(lesson));
         return mv;
     }
 

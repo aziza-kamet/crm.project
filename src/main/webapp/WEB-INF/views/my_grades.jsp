@@ -46,7 +46,6 @@
                                         <tbody>
                                         <c:forEach items="${lessons}" var="lesson">
                                             <tr>
-                                                    <%-- TODO mustn't show id as numeration --%>
                                                 <td>${lesson[2].title}</td>
                                                 <td>${lesson[0]}</td>
                                                 <td>${lesson[1]}</td>

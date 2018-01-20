@@ -85,7 +85,24 @@ public class MarkBean {
         }
     }
 
-    public HashMap<Long, ArrayList<Mark>> getList(Lesson lesson) {
+    public void delete(Long id) {
+        try{
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+
+            Mark mark = session.find(Mark.class, id);
+
+            session.delete(mark);
+            transaction.commit();
+            session.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public HashMap<Long, ArrayList<Mark>> getMap(Lesson lesson) {
 
         try{
 

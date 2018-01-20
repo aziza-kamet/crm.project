@@ -2,19 +2,16 @@ package com.crm.project.beans;
 
 import com.crm.project.dao.Course;
 import com.crm.project.dao.Lesson;
+import com.crm.project.dao.Mark;
+import com.crm.project.dao.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import javax.persistence.criteria.*;
+import java.util.*;
 
 /**
  * Created by aziza on 03.11.17.
@@ -121,5 +118,39 @@ public class LessonBean {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public Map<Long, Double> avgMarks(Lesson lesson) {
+
+        try{
+
+            Session session = sessionFactory.openSession();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+
+            CriteriaQuery<Object[]> criteriaQuery = builder.createQuery(Object[].class);
+            Root marksTable = criteriaQuery.from(Mark.class);
+            Predicate lessonPredicate = builder.equal(marksTable.get("lesson"), lesson);
+            Expression avgExpression = builder.avg(marksTable.<Integer> get("markValue"));
+            criteriaQuery.multiselect(marksTable.get("user"), avgExpression).groupBy(marksTable.get("user"));
+            criteriaQuery.where(builder.and(lessonPredicate));
+
+            Query query = session.createQuery(criteriaQuery);
+            ArrayList<Object[]> results = (ArrayList<Object[]>) query.getResultList();
+            HashMap<Long, Double> marks = new HashMap<Long, Double>();
+
+            System.out.println("size: " + results.size());
+
+            for (Object[] obj:
+                    results) {
+                marks.put(((User)obj[0]).getId(), (Double) obj[1]);
+            }
+
+            return marks;
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

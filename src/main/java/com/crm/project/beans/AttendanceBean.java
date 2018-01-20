@@ -82,7 +82,7 @@ public class AttendanceBean {
         }
     }
 
-    public HashMap<Long, ArrayList<Attendance>> getList(Lesson lesson) {
+    public HashMap<Long, ArrayList<Attendance>> getMap(Lesson lesson) {
 
         try{
 
