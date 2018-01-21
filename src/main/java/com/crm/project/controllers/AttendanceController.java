@@ -21,23 +21,4 @@ public class AttendanceController {
     @Autowired
     AttendanceBean attendanceBean;
 
-    @GetMapping("/my_attendances")
-    public ModelAndView my(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        if (!AuthChecker.isAuth(request.getSession(), response)) {
-            return null;
-        }
-
-        User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("student")) {
-            response.sendRedirect("403");
-            return null;
-        }
-        ModelAndView mv = new ModelAndView("my_attendances");
-        ArrayList<Object[]> lessons = attendanceBean.avgAndTotal(user);
-        mv.addObject("lessons", lessons);
-
-        return mv;
-    }
-
 }

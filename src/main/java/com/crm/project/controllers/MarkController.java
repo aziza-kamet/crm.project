@@ -23,25 +23,6 @@ public class MarkController {
     @Autowired
     MarkBean markBean;
 
-    @GetMapping("/my_grades")
-    public ModelAndView my(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        if (!AuthChecker.isAuth(request.getSession(), response)) {
-            return null;
-        }
-
-        User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("student")) {
-            response.sendRedirect("403");
-            return null;
-        }
-        ModelAndView mv = new ModelAndView("my_grades");
-        ArrayList<Object[]> lessons = markBean.avgAndTotal(user);
-        mv.addObject("lessons", lessons);
-
-        return mv;
-    }
-
     @PostMapping("lessons/{lid}/groups/{gid}/grades/{mid}")
     public void delete(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable(name = "lid") Long lid,

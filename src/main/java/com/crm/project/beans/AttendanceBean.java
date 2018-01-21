@@ -118,7 +118,7 @@ public class AttendanceBean {
         return new HashMap<Long, ArrayList<Attendance>>();
     }
 
-    public ArrayList<Object[]> avgAndTotal(User user) {
+    public HashMap<Long, HashMap> avgAndTotal(User user) {
 
         try{
 
@@ -135,20 +135,52 @@ public class AttendanceBean {
 
             Query query = session.createQuery(criteriaQuery);
             ArrayList<Object[]> results = (ArrayList<Object[]>) query.getResultList();
-            HashMap<Long, Object[]> attendances = new HashMap<Long, Object[]>();
+            HashMap<Long, HashMap> attendances = new HashMap<Long, HashMap>();
 
             for (Object[] obj:
                     results) {
                 Lesson lesson = (Lesson) obj[2];
-                attendances.put(lesson.getId(), obj);
+                obj[1] = ((Double) obj[1]) * 100;
+//                attendances.put(lesson.getId(), obj);
+
+
+
+                HashMap contentMap = new HashMap();
+                if (attendances.containsKey(lesson.getCourse().getId())) {
+                    contentMap = attendances.get(lesson.getCourse().getId());
+                }
+
+                HashMap<Long, Object[]> lessons = new HashMap<Long, Object[]>();
+                if (contentMap.containsKey("lessons")) {
+                    lessons = (HashMap<Long, Object[]>) contentMap.get("lessons");
+                }
+
+                Double avg = 0.0;
+                if (contentMap.containsKey("avg")) {
+                    avg = (Double) contentMap.get("avg");
+                }
+                Double sum = ((Double)obj[1]);
+                if (contentMap.containsKey("sum")) {
+                    sum  = (Double) contentMap.get("sum") + ((Double)obj[1]);
+                }
+                lessons.put(lesson.getId(), obj);
+                contentMap.put("lessons", lessons);
+                contentMap.put("sum", sum);
+
+                if (sum != 0) {
+                    avg = Double.valueOf(sum / lessons.size());
+                }
+                contentMap.put("avg", avg);
+
+                attendances.put(lesson.getCourse().getId(), contentMap);
             }
 
-            return results;
+            return attendances;
 
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        return new ArrayList<Object[]>();
+        return null;
     }
 }

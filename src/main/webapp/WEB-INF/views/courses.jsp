@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: aziza
@@ -82,14 +83,14 @@
                                         </div>
                                     </div>
                                 </c:when>
-                                <c:otherwise>
+                                <c:when test="${user.role.name.equals('teacher')}">
                                     <div class="accordion">
                                         <c:forEach items="${courses}" var="course">
                                             <div class="card collapse-card">
                                                 <div class="card-header" id="course-${course.id}">
                                                     <h1 class="mb-0" data-toggle="collapse"
                                                         data-target="#lessons-${course.id}" aria-expanded="true" aria-controls="collapseOne">
-                                                        ${course.name}
+                                                            ${course.name}
                                                         <button class="btn btn-link pull-right">
                                                             <i class="fa fa-chevron-down"></i>
                                                         </button>
@@ -101,6 +102,87 @@
                                                         <div class="list-group">
                                                             <c:forEach items="${course.lessons}" var="lesson">
                                                                 <a href="/courses/${course.id}/lessons/${lesson.id}" class="list-group-item list-group-item-action border-0">${lesson.title}</a>
+                                                            </c:forEach>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="accordion">
+                                        <div class="card collapse-card">
+                                            <div class="card-header" id="header">
+                                                <div class="row">
+                                                    <div class="col-sm-4"><h3>Курс</h3></div>
+                                                    <div class="col-sm-3"><h3>Оценка</h3></div>
+                                                    <div class="col-sm-4"><h3>Посещаемость</h3></div>
+                                                    <div class="col-sm-1"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <c:forEach items="${courses}" var="course">
+                                            <div class="card collapse-card">
+                                                <div class="card-header" id="course-${course.id}">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <%--<h2 class="mb-0">--%>
+                                                                ${course.name}
+                                                            <%--</h2>--%>
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <%--<h3 class="mb-0">--%>
+                                                                <fmt:formatNumber var="mark_avg"
+                                                                  value="${marks.get(course.id).get('avg')}"
+                                                                  maxFractionDigits="2"  />
+                                                                ${mark_avg}
+                                                            <%--</h3>--%>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <%--<h3 class="mb-0">--%>
+                                                                <fmt:formatNumber var="att_avg"
+                                                                  value="${attendances.get(course.id).get('avg')}"
+                                                                  maxFractionDigits="2"  />
+                                                                ${att_avg}%
+                                                            <%--</h3>--%>
+                                                        </div>
+                                                        <div class="col-sm-1">
+                                                            <button class="btn btn-link pull-right" data-toggle="collapse"
+                                                                    data-target="#lessons-${course.id}" aria-expanded="true" aria-controls="collapseOne">
+                                                                <i class="fa fa-chevron-down"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="lessons-${course.id}" class="collapse" aria-labelledby="course-${course.id}" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="list-group">
+                                                            <c:forEach items="${course.lessons}" var="lesson">
+                                                                <c:set var="mark" value="${marks.get(course.id).get('lessons').get(lesson.id)}"/>
+                                                                <c:set var="attendance" value="${attendances.get(course.id).get('lessons').get(lesson.id)}"/>
+                                                                <div class="row">
+                                                                    <div class="col-sm-4">
+                                                                        <a href="/courses/${course.id}/lessons/${lesson.id}" class="list-group-item list-group-item-action border-0">${lesson.title}</a>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <c:if test="${mark ne null}">
+                                                                            <fmt:formatNumber var="mark_rounded"
+                                                                              value="${mark[1]}"
+                                                                              maxFractionDigits="2"  />
+                                                                            ${mark_rounded} (сумма: ${mark[0]})
+                                                                        </c:if>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <c:if test="${attendance ne null}">
+                                                                            <fmt:formatNumber var="att_rounded"
+                                                                                              value="${attendance[1]}"
+                                                                                              maxFractionDigits="2"  />
+                                                                            ${att_rounded}% (сумма: ${attendance[0]})
+                                                                        </c:if>
+                                                                    </div>
+                                                                </div>
                                                             </c:forEach>
                                                         </div>
                                                     </div>

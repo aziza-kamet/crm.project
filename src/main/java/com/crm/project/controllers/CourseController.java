@@ -1,7 +1,9 @@
 package com.crm.project.controllers;
 
+import com.crm.project.beans.AttendanceBean;
 import com.crm.project.beans.CompanyBean;
 import com.crm.project.beans.CourseBean;
+import com.crm.project.beans.MarkBean;
 import com.crm.project.dao.Company;
 import com.crm.project.dao.User;
 import com.crm.project.helpers.AuthChecker;
@@ -24,6 +26,10 @@ import java.io.IOException;
 public class CourseController {
     @Autowired
     CourseBean courseBean;
+    @Autowired
+    MarkBean markBean;
+    @Autowired
+    AttendanceBean attendanceBean;
     @Autowired
     CompanyBean companyBean;
 
@@ -73,6 +79,10 @@ public class CourseController {
         }
         ModelAndView mv = new ModelAndView("courses");
         mv.addObject("courses", courseBean.my(user));
+        if (user.getRole().getName().equals("student")) {
+            mv.addObject("marks", markBean.avgAndTotal(user));
+            mv.addObject("attendances", attendanceBean.avgAndTotal(user));
+        }
         return mv;
     }
 

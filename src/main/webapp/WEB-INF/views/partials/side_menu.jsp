@@ -84,22 +84,6 @@
                         Расписание
                     </span>
                 </a></li>
-                <c:if test="${user.role.name.equals('student')}">
-                    <li <c:if test="${fn:startsWith(url, '/my_grades')}">
-                        class="active"
-                    </c:if>> <a href="/my_grades">
-                        <span class="sidebar-li-text <c:if test="${cookie.menu_shrinked.value == 'true'}">__hidden</c:if>">
-                            Мои оценки
-                        </span>
-                    </a></li>
-                    <li <c:if test="${fn:startsWith(url, '/my_attendances')}">
-                        class="active"
-                    </c:if>> <a href="/my_attendances">
-                        <span class="sidebar-li-text <c:if test="${cookie.menu_shrinked.value == 'true'}">__hidden</c:if>">
-                            Моя посещаемость
-                        </span>
-                    </a></li>
-                </c:if>
             </ul>
         </c:when>
     </c:choose>
