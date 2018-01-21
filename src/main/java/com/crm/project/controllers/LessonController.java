@@ -157,39 +157,13 @@ public class LessonController {
         Lesson lesson = lessonBean.getBy(lid);
         Group group = groupBean.getBy(gid);
 
-        Map<Long, Double> avgMarks = lessonBean.avgMarks(lesson);
-
         mv.addObject("lesson", lesson);
         mv.addObject("group", group);
         mv.addObject("students", groupBean.students(group));
         mv.addObject("marks", markBean.getMap(lesson));
-        mv.addObject("avgMarks", avgMarks);
-        return mv;
-    }
-
-    @GetMapping("/lessons/{lid}/groups/{gid}/attendances")
-    public ModelAndView attendances(HttpServletRequest request, HttpServletResponse response,
-                              @PathVariable(name = "lid") Long lid,
-                              @PathVariable(name = "gid") Long gid) throws IOException {
-
-        if (!AuthChecker.isAuth(request.getSession(), response)) {
-            return null;
-        }
-
-        User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("teacher")) {
-//            TODO redirect to proper page
-            response.sendRedirect("/403");
-            return null;
-        }
-        ModelAndView mv = new ModelAndView("lesson_attendances");
-        Lesson lesson = lessonBean.getBy(lid);
-        Group group = groupBean.getBy(gid);
-
-        mv.addObject("lesson", lesson);
-        mv.addObject("group", group);
-        mv.addObject("students", groupBean.students(group));
         mv.addObject("attendances", attendanceBean.getMap(lesson));
+        mv.addObject("avgMarks", lessonBean.avgMarks(lesson));
+        mv.addObject("avgAttendances", lessonBean.avgAttendances(lesson));
         return mv;
     }
 
@@ -236,6 +210,6 @@ public class LessonController {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        response.sendRedirect("/lessons/" + lid + "/groups/" + gid + "/attendances");
+        response.sendRedirect("/lessons/" + lid + "/groups/" + gid + "/grades");
     }
 }

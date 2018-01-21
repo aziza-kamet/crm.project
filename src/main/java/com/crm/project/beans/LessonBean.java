@@ -1,9 +1,6 @@
 package com.crm.project.beans;
 
-import com.crm.project.dao.Course;
-import com.crm.project.dao.Lesson;
-import com.crm.project.dao.Mark;
-import com.crm.project.dao.User;
+import com.crm.project.dao.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -138,14 +135,44 @@ public class LessonBean {
             ArrayList<Object[]> results = (ArrayList<Object[]>) query.getResultList();
             HashMap<Long, Double> marks = new HashMap<Long, Double>();
 
-            System.out.println("size: " + results.size());
-
             for (Object[] obj:
                     results) {
                 marks.put(((User)obj[0]).getId(), (Double) obj[1]);
             }
 
             return marks;
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Map<Long, Double> avgAttendances(Lesson lesson) {
+
+        try{
+
+            Session session = sessionFactory.openSession();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+
+            CriteriaQuery<Object[]> criteriaQuery = builder.createQuery(Object[].class);
+            Root attendancesTable = criteriaQuery.from(Attendance.class);
+            Predicate lessonPredicate = builder.equal(attendancesTable.get("lesson"), lesson);
+            Expression avgExpression = builder.avg(attendancesTable.<Integer> get("attendanceValue"));
+            criteriaQuery.multiselect(attendancesTable.get("user"), avgExpression).groupBy(attendancesTable.get("user"));
+            criteriaQuery.where(builder.and(lessonPredicate));
+
+            Query query = session.createQuery(criteriaQuery);
+            ArrayList<Object[]> results = (ArrayList<Object[]>) query.getResultList();
+            HashMap<Long, Double> attendances = new HashMap<Long, Double>();
+
+            for (Object[] obj:
+                    results) {
+                attendances.put(((User)obj[0]).getId(), ((Double) obj[1]) * 100);
+            }
+
+            return attendances;
 
         }catch (Exception e){
             e.printStackTrace();
