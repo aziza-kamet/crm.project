@@ -25,7 +25,12 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-11">
-                            <h2 class="no-margin-bottom">Расписание</h2>
+                            <h2 class="no-margin-bottom">
+                                Расписание
+                                <c:if test="${user.role.name.equals('admin')}">
+                                    ${group.name}
+                                </c:if>
+                            </h2>
                         </div>
                         <c:if test="${user.role.name.equals('admin')}">
                             <div class="col-sm-1">

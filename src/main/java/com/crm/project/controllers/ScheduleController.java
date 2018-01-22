@@ -60,6 +60,7 @@ public class ScheduleController {
             scheduleList = scheduleBean.getListByGroup(groupBean.getBy(gid));
             Group group = groupBean.getBy(gid);
             mv.addObject("gid", gid);
+            mv.addObject("group", group);
             mv.addObject("courses", group.getCourses());
         } else {
             scheduleList = scheduleBean.getListByUser(user);

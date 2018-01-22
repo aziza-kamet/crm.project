@@ -50,9 +50,13 @@ public class ScheduleBean {
 
             CriteriaQuery<Schedule> criteriaQuery = builder.createQuery(Schedule.class);
             Root<Schedule> schedulesTable = criteriaQuery.from(Schedule.class);
-            Predicate groupPredicate = builder.equal(schedulesTable.get("group"), group);
+            Predicate[] schedulePredicates = {
+                    builder.greaterThanOrEqualTo(schedulesTable.<java.sql.Date>get("endDate"), builder.currentDate()),
+                    builder.equal(schedulesTable.get("group"), group)
+            };
+
             criteriaQuery.select(schedulesTable)
-                    .where(groupPredicate);
+                    .where(schedulePredicates);
 
             Query query = session.createQuery(criteriaQuery);
 
@@ -76,9 +80,13 @@ public class ScheduleBean {
             Root<Schedule> schedulesTable = criteriaQuery.from(Schedule.class);
             Join<Schedule, Group> groupJoin = schedulesTable.join("group");
             Join<Group, GroupUser> groupUserJoin = groupJoin.join("groupUsers");
-            Predicate userPredicate = builder.equal(groupUserJoin.get("user"), user);
+            Predicate[] schedulePredicates = {
+                    builder.lessThanOrEqualTo(schedulesTable.<java.sql.Date>get("startDate"), builder.currentDate()),
+                    builder.greaterThanOrEqualTo(schedulesTable.<java.sql.Date>get("endDate"), builder.currentDate()),
+                    builder.equal(groupUserJoin.get("user"), user)
+            };
             criteriaQuery.select(schedulesTable)
-                    .where(userPredicate);
+                    .where(schedulePredicates);
 
             Query query = session.createQuery(criteriaQuery);
 
