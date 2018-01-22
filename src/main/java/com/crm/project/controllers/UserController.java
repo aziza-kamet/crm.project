@@ -72,7 +72,7 @@ public class UserController {
 
         User user = (User) request.getSession().getAttribute("user");
 
-        if (userBean.getBy(user.getLogin(), password) == null) {
+        if (userBean.getBy(user.getCompanyLogin(), password) == null) {
             response.sendRedirect("/");
             return;
         }

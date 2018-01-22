@@ -12,7 +12,7 @@
             </a>
         </div>
         <div class="title">
-            <a href="/profile">
+            <a href="/superadmin">
                 <h1 class="h4">${user.login}</h1>
             </a>
         </div>
@@ -23,7 +23,7 @@
         <li <c:if test="${url.equals('/superadmin/superadmins')}">
                 class="active"
         </c:if>> <a href="/superadmin/superadmins">
-            <i class="icon-home"></i>
+            <i class="fa fa-user-secret"></i>
             <span class="sidebar-li-text <c:if test="${cookie.menu_shrinked.value == 'true'}">__hidden</c:if>">
                 Суперадмины
             </span>
@@ -31,7 +31,7 @@
         <li <c:if test="${url.equals('/superadmin/admins')}">
             class="active"
         </c:if>> <a href="/superadmin/admins">
-            <i class="icon-grid"></i>
+            <i class="fa fa-user"></i>
             <span class="sidebar-li-text <c:if test="${cookie.menu_shrinked.value == 'true'}">__hidden</c:if>">
                 Админы
             </span>

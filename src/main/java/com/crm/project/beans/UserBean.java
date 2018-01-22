@@ -8,6 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +47,7 @@ public class UserBean {
 
                 Role role = roleBean.getBy(roleId);
 
-                session.save(new User(login, company.getAppendedLogin(login), password, name, surname, company, role));
+                session.save(new User(login, company.getAppendedLogin(login), getEncrypted(password), name, surname, company, role));
                 transaction.commit();
 
                 return true;
@@ -85,7 +90,7 @@ public class UserBean {
             Root<User> usersTable = criteriaQuery.from(User.class);
             criteriaQuery.select(usersTable);
             Predicate loginPredicate = builder.equal(usersTable.get("companyLogin"), login);
-            Predicate passwordPredicate = builder.equal(usersTable.get("password"), password);
+            Predicate passwordPredicate = builder.equal(usersTable.get("password"), getEncrypted(password));
             Predicate activePredicate = builder.equal(usersTable.get("active"), 1);
             criteriaQuery.where(builder.and(loginPredicate, passwordPredicate, activePredicate));
 
@@ -257,7 +262,7 @@ public class UserBean {
             Transaction transaction = session.beginTransaction();
 
             User user = session.find(User.class, id);
-            user.setPassword(password);
+            user.setPassword(getEncrypted(password));
             session.update(user);
             transaction.commit();
 
@@ -310,5 +315,29 @@ public class UserBean {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private String getEncrypted(String originalString) {
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(
+                    org.apache.commons.io.IOUtils.toByteArray(
+                            new StringReader(originalString), "UTF-8"
+                    ));
+
+            StringBuffer hexString = new StringBuffer();
+            for (byte aHash : hash) {
+                String hex = Integer.toHexString(0xff & aHash);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
