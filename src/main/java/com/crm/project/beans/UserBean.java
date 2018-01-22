@@ -277,18 +277,27 @@ public class UserBean {
 
             Session session = sessionFactory.openSession();
             CriteriaBuilder builder = session.getCriteriaBuilder();
-
             CriteriaQuery<Course> criteriaQuery = builder.createQuery(Course.class);
             Root<Course> coursesTable = criteriaQuery.from(Course.class);
-            Join<Course, GroupCourse> groupCoursesTable = coursesTable.join("groupCourses");
-            Join<GroupCourse, Group> groupsTable = groupCoursesTable.join("group");
-            Join<Group, GroupUser> groupUsersTable = groupsTable.join("groupUsers");
-            Predicate coursePredicate = builder.equal(coursesTable.get("id"), cid);
-            Predicate userPredicate = builder.equal(groupUsersTable.get("user"), user);
-            Predicate activePredicate = builder.equal(coursesTable.get("active"), 1);
-            criteriaQuery.select(coursesTable);
-            criteriaQuery.where(builder.and(coursePredicate, userPredicate, activePredicate));
 
+            if (user.getRole().getName().equals("admin")) {
+                Predicate predicates[] = {
+                        builder.equal(coursesTable.get("id"), cid),
+                        builder.equal(coursesTable.get("company"), user.getCompany())
+                };
+                criteriaQuery.select(coursesTable);
+                criteriaQuery.where(builder.and(predicates));
+            } else {
+
+                Join<Course, GroupCourse> groupCoursesTable = coursesTable.join("groupCourses");
+                Join<GroupCourse, Group> groupsTable = groupCoursesTable.join("group");
+                Join<Group, GroupUser> groupUsersTable = groupsTable.join("groupUsers");
+                Predicate coursePredicate = builder.equal(coursesTable.get("id"), cid);
+                Predicate userPredicate = builder.equal(groupUsersTable.get("user"), user);
+                Predicate activePredicate = builder.equal(coursesTable.get("active"), 1);
+                criteriaQuery.select(coursesTable);
+                criteriaQuery.where(builder.and(coursePredicate, userPredicate, activePredicate));
+            }
             Query query = session.createQuery(criteriaQuery);
 
             List list = query.getResultList();
@@ -299,6 +308,46 @@ public class UserBean {
         }
 
         return false;
+    }
+
+    public boolean hasGroup(User user, Group group) {
+
+        try{
+
+            Session session = sessionFactory.openSession();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+
+            CriteriaQuery<Group> criteriaQuery = builder.createQuery(Group.class);
+            if (user.getRole().getName().equals("admin")) {
+                Root<Group> groupsTable = criteriaQuery.from(Group.class);
+                Predicate predicates[] = {
+                        builder.equal(groupsTable.get("id"), group.getId()),
+                        builder.equal(groupsTable.get("company"), user.getCompany())
+                };
+                criteriaQuery.select(groupsTable);
+                criteriaQuery.where(builder.and(predicates));
+            } else {
+                Root<Group> groupsTable = criteriaQuery.from(Group.class);
+                Join<Group, GroupUser> groupUsersTable = groupsTable.join("groupUsers");
+                Predicate predicates[] = {
+                        builder.equal(groupUsersTable.get("group"), group),
+                        builder.equal(groupUsersTable.get("user"), user),
+                        builder.equal(groupsTable.get("active"), 1)
+                };
+                criteriaQuery.select(groupsTable);
+                criteriaQuery.where(builder.and(predicates));
+            }
+            Query query = session.createQuery(criteriaQuery);
+
+            List list = query.getResultList();
+            return list.size() != 0;
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+
     }
 
     public void delete(Long id) {
@@ -316,7 +365,6 @@ public class UserBean {
             e.printStackTrace();
         }
     }
-
     private String getEncrypted(String originalString) {
         MessageDigest digest = null;
         try {

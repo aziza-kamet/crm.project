@@ -67,8 +67,8 @@ public class LessonController {
         Course course = courseBean.getBy(cid);
         User user = (User) request.getSession().getAttribute("user");
 
-        if (!user.getRole().getName().equals("admin") && !userBean.hasCourse(user, cid)) {
-            response.sendRedirect("403");
+        if (!userBean.hasCourse(user, cid)) {
+            response.sendRedirect("/403");
             return null;
         }
 
@@ -99,8 +99,8 @@ public class LessonController {
         User user = (User) request.getSession().getAttribute("user");
         List<LessonAttachment> attachments = attachmentBean.getList(lid);
 
-        if (user.getRole().getName().equals("admin") || !userBean.hasCourse(user, cid)) {
-            response.sendRedirect("403");
+        if (!userBean.hasCourse(user, cid)) {
+            response.sendRedirect("/403");
             return null;
         }
 
@@ -150,7 +150,11 @@ public class LessonController {
 
         User user = (User) request.getSession().getAttribute("user");
         if (!user.getRole().getName().equals("teacher")) {
-            response.sendRedirect("403");
+            response.sendRedirect("/403");
+            return null;
+        }
+        if (!userBean.hasGroup(user, groupBean.getBy(gid))) {
+            response.sendRedirect("/403");
             return null;
         }
         ModelAndView mv = new ModelAndView("lesson_grades");

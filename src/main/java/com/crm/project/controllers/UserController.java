@@ -94,7 +94,6 @@ public class UserController {
             return null;
         }
 
-
         User user = (User) request.getSession().getAttribute("user");
         ModelAndView mv = new ModelAndView("teachers");
         mv.addObject("users", userBean.getListOfTeachers(user.getCompany().getId()));
@@ -227,6 +226,11 @@ public class UserController {
                               @RequestParam(name = "login") String login,
                               @RequestParam(name = "name") String name,
                               @RequestParam(name = "surname") String surname) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
 
         try {

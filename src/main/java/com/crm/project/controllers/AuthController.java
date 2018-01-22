@@ -1,5 +1,6 @@
 package com.crm.project.controllers;
 
+import com.crm.project.helpers.AuthChecker;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,13 +20,12 @@ import java.io.IOException;
 @Controller
 public class AuthController {
     @GetMapping("/profile")
-    public ModelAndView auth(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView auth(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         HttpSession session = request.getSession();
 
-        if (session.getAttribute("user") == null || session.getAttribute("role") == null) {
-            session.invalidate();
-            return new ModelAndView("auth");
+        if (!AuthChecker.isAuth(session, response)) {
+            return null;
         }
 
         return new ModelAndView("profile");
@@ -46,6 +46,10 @@ public class AuthController {
 
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
         request.getSession().invalidate();
         response.sendRedirect("/");
     }

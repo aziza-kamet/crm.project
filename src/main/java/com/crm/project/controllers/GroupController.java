@@ -97,8 +97,12 @@ public class GroupController {
             return null;
         }
 
-        ModelAndView mv = new ModelAndView("group_students");
         User user = (User) request.getSession().getAttribute("user");
+        if (!userBean.hasGroup(user, groupBean.getBy(id))) {
+            response.sendRedirect("/403");
+            return null;
+        }
+        ModelAndView mv = new ModelAndView("group_students");
         Group group = groupBean.getBy(id);
 
         mv.addObject("students", groupBean.students(group));
@@ -115,8 +119,12 @@ public class GroupController {
             return null;
         }
 
-        ModelAndView mv = new ModelAndView("group_teachers");
         User user = (User) request.getSession().getAttribute("user");
+        if (!userBean.hasGroup(user, groupBean.getBy(id))) {
+            response.sendRedirect("/403");
+            return null;
+        }
+        ModelAndView mv = new ModelAndView("group_teachers");
         Group group = groupBean.getBy(id);
         Company company = companyBean.getBy(user.getCompany().getId());
 
@@ -230,6 +238,10 @@ public class GroupController {
     @GetMapping("/groups/{id}/courses/out")
     public @ResponseBody ModelAndView coursesOut(HttpServletRequest request, HttpServletResponse response,
                             @PathVariable(name = "id") Long id) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
 
         ModelAndView mv = new ModelAndView("group_courses");
         User user = (User) request.getSession().getAttribute("user");

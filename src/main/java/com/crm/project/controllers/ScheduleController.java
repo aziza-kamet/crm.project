@@ -47,16 +47,20 @@ public class ScheduleController {
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response,
                              @PathVariable(name = "gid", required = false) Long gid) throws IOException {
         HttpSession session = request.getSession();
-        if (!AuthChecker.isAuth(session)) {
-            session.invalidate();
-            return new ModelAndView("auth");
+        if (!AuthChecker.isAuth(session, response)) {
+            return null;
         }
 
         User user = (User) request.getSession().getAttribute("user");
+
         List<Schedule> scheduleList = new ArrayList<Schedule>();
 
         ModelAndView mv = new ModelAndView("schedule");
         if (user.getRole().getName().equals("admin")) {
+            if (!userBean.hasGroup(user, groupBean.getBy(gid))) {
+                response.sendRedirect("/403");
+                return null;
+            }
             scheduleList = scheduleBean.getListByGroup(groupBean.getBy(gid));
             Group group = groupBean.getBy(gid);
             mv.addObject("gid", gid);
@@ -97,6 +101,9 @@ public class ScheduleController {
                        @RequestParam(name = "startDay") String startDay,
                        @RequestParam(name = "endDay") String endDay,
                        @RequestParam(name = "notes", required = false) String notes) throws IOException {
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
         try {
             Long cid = Long.parseLong(courseId);
             Integer did = Integer.parseInt(dayId);
@@ -131,6 +138,9 @@ public class ScheduleController {
                        @RequestParam(name = "startDay") String startDay,
                        @RequestParam(name = "endDay") String endDay,
                        @RequestParam(name = "notes", required = false) String notes) throws IOException {
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
         try {
             Long cid = Long.parseLong(courseId);
             Integer did = Integer.parseInt(dayId);
@@ -159,6 +169,9 @@ public class ScheduleController {
     public void delete(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable(name = "gid") Long gid,
                        @PathVariable(name = "sid") Long sid) throws IOException {
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
 
         scheduleBean.delete(sid);
         response.sendRedirect("/groups/" + gid + "/schedule");

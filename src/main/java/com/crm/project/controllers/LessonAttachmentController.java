@@ -43,7 +43,6 @@ public class LessonAttachmentController {
             return null;
         }
 
-
         ModelAndView mv = new ModelAndView("lesson_attachments");
         List<LessonAttachment> attachments = attachmentBean.getList(lid);
         mv.addObject("attachments", attachments);
