@@ -50,6 +50,12 @@ public class LessonController {
             return;
         }
 
+        User user = (User) request.getSession().getAttribute("user");
+        if (!user.getRole().getName().equals("admin")) {
+            response.sendRedirect("403");
+            return;
+        }
+
         lessonBean.create(title, content, cid);
         response.sendRedirect("/courses/" + cid + "/lessons");
     }
@@ -67,7 +73,8 @@ public class LessonController {
         Course course = courseBean.getBy(cid);
         User user = (User) request.getSession().getAttribute("user");
 
-        if (!userBean.hasCourse(user, cid)) {
+        if ((!user.getName().equals("admin") && !user.getName().equals("teacher"))
+                || !userBean.hasCourse(user, cid)) {
             response.sendRedirect("/403");
             return null;
         }

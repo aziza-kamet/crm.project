@@ -95,6 +95,11 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
+        if (!user.getRole().getName().equals("admin")) {
+            response.sendRedirect("403");
+            return null;
+        }
+
         ModelAndView mv = new ModelAndView("teachers");
         mv.addObject("users", userBean.getListOfTeachers(user.getCompany().getId()));
         return mv;
@@ -113,6 +118,10 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
+        if (!user.getRole().getName().equals("admin")) {
+            response.sendRedirect("403");
+            return;
+        }
 
         if (!password.equals(confPassword)) {
 
@@ -137,6 +146,12 @@ public class UserController {
             return;
         }
 
+        User user = (User) request.getSession().getAttribute("user");
+        if (!user.getRole().getName().equals("admin")) {
+            response.sendRedirect("403");
+            return;
+        }
+
         userBean.delete(id);
 
         response.sendRedirect("/teachers");
@@ -154,6 +169,10 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
+        if (!user.getRole().getName().equals("admin")) {
+            response.sendRedirect("403");
+            return;
+        }
 
         try {
             userBean.update(id, login, name, surname, roleBean.getBy("teacher").getId(), user.getCompany().getId());
@@ -171,8 +190,11 @@ public class UserController {
             return null;
         }
 
-
         User user = (User) request.getSession().getAttribute("user");
+        if (!user.getRole().getName().equals("admin")) {
+            response.sendRedirect("403");
+            return null;
+        }
         ModelAndView mv = new ModelAndView("students");
         mv.addObject("users", userBean.getListOfStudents(user.getCompany().getId()));
         return mv;
@@ -191,6 +213,10 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
+        if (!user.getRole().getName().equals("admin")) {
+            response.sendRedirect("403");
+            return;
+        }
 
         if (!password.equals(confPassword)) {
             response.sendRedirect("/students");
@@ -214,6 +240,11 @@ public class UserController {
             return;
         }
 
+        User user = (User) request.getSession().getAttribute("user");
+        if (!user.getRole().getName().equals("admin")) {
+            response.sendRedirect("403");
+            return;
+        }
 
         userBean.delete(id);
 
@@ -232,6 +263,10 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
+        if (!user.getRole().getName().equals("admin")) {
+            response.sendRedirect("403");
+            return;
+        }
 
         try {
             userBean.update(id, login, name, surname, roleBean.getBy("student").getId(), user.getCompany().getId());
