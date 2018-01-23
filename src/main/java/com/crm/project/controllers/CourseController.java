@@ -55,7 +55,7 @@ public class CourseController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return null;
         }
@@ -73,13 +73,13 @@ public class CourseController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (user.getRole().getName().equals("admin")) {
+        if (user.is("admin")) {
             response.sendRedirect("403");
             return null;
         }
         ModelAndView mv = new ModelAndView("courses");
         mv.addObject("courses", courseBean.my(user));
-        if (user.getRole().getName().equals("student")) {
+        if (user.is("student")) {
             mv.addObject("marks", markBean.avgAndTotal(user));
             mv.addObject("attendances", attendanceBean.avgAndTotal(user));
         }

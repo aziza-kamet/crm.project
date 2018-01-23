@@ -49,7 +49,7 @@
                                             <div class="card-close d-flex items-center">
                                                 <a href="#" data-toggle="modal" data-target="#edit-modal"
                                                     data-action="/courses/${cid}/lessons/${lesson.id}/edit" data-title="${lesson.title}"
-                                                    data-content="${lesson.content}">
+                                                    data-content-id="#content-${lesson.id}">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
                                                 <form action="/courses/${cid}/lessons/${lesson.id}" method="post">
@@ -58,8 +58,8 @@
                                             </div>
                                             <div class="card-body">
                                                 <h3>${lesson.title}</h3>
-                                                <p>${lesson.content}</p>
-                                                <div class="date pull-right"><small class="text-info">${lesson.postDate}</small></div>
+                                                <div class="content" id="content-${lesson.id}">${lesson.content}</div>
+                                                <div class="date pull-right"><small class="text-info">${lesson.formattedPostDate}</small></div>
                                             </div>
                                             <div class="row no-padding no-margin-bottom">
                                                 <c:forEach items="${lesson.attachments}" var="attachment">
@@ -100,7 +100,7 @@
                     </div>
                     <div class="form-group">
                         <label>Содержание</label>
-                        <textarea class="form-control" name="content"></textarea>
+                        <textarea class="form-control ckeditor" name="content"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -127,7 +127,7 @@
                     </div>
                     <div class="form-group">
                         <label>Содержание</label>
-                        <textarea class="form-control js-content" name="content"></textarea>
+                        <textarea class="form-control js-content ckeditor" name="content"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -145,12 +145,13 @@
         var button = $(event.relatedTarget);
         var action = button.attr('data-action');
         var title = button.attr('data-title');
-        var content = button.attr('data-content');
+        var content = $(button.attr('data-content-id')).html();
         var modal = $(this);
         modal.find('form').attr("action", action);
         modal.find('form').attr("method", "post");
         modal.find('.js-title').val(title);
         modal.find('.js-content').val(content);
+        console.log(CKEDITOR.instances['content'].setData(content));
     })
 </script>
 

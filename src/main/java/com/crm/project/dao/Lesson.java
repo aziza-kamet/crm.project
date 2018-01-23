@@ -4,6 +4,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -102,5 +104,11 @@ public class Lesson {
 
     public void setAttachments(List<LessonAttachment> attachments) {
         this.attachments = attachments;
+    }
+
+    public String getFormattedPostDate() {
+
+        DateFormat format = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
+        return format.format(this.postDate);
     }
 }

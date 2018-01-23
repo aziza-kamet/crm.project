@@ -56,7 +56,7 @@ public class ScheduleController {
         List<Schedule> scheduleList = new ArrayList<Schedule>();
 
         ModelAndView mv = new ModelAndView("schedule");
-        if (user.getRole().getName().equals("admin")) {
+        if (user.is("admin")) {
             if (!userBean.hasGroup(user, groupBean.getBy(gid))) {
                 response.sendRedirect("/403");
                 return null;

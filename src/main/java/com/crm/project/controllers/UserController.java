@@ -95,7 +95,7 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return null;
         }
@@ -118,7 +118,7 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return;
         }
@@ -147,7 +147,7 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return;
         }
@@ -169,7 +169,7 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return;
         }
@@ -191,7 +191,7 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return null;
         }
@@ -213,7 +213,7 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return;
         }
@@ -241,7 +241,7 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return;
         }
@@ -263,7 +263,7 @@ public class UserController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return;
         }

@@ -105,7 +105,7 @@ public class News {
 
     public String getFormattedPostDate() {
 
-        DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        DateFormat format = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
         return format.format(this.postDate);
     }
 }

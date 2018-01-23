@@ -28,10 +28,10 @@ a:hover, a:focus, i:hover, i:focus, span:hover, span:focus {
   text-decoration: none;
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-}
+/*ul {*/
+  /*margin: 0;*/
+  /*padding: 0;*/
+/*}*/
 
 section {
   padding: 50px 0;
@@ -2688,7 +2688,7 @@ mark,
   background-color: #fcf8e3;
 }
 
-.blockquote {
+blockquote {
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
   font-size: 1.25rem;

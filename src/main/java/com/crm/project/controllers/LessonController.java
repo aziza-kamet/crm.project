@@ -51,7 +51,7 @@ public class LessonController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return;
         }
@@ -73,7 +73,7 @@ public class LessonController {
         Course course = courseBean.getBy(cid);
         User user = (User) request.getSession().getAttribute("user");
 
-        if ((!user.getName().equals("admin") && !user.getName().equals("teacher"))
+        if ((!user.is("admin"))
                 || !userBean.hasCourse(user, cid)) {
             response.sendRedirect("/403");
             return null;
@@ -81,7 +81,7 @@ public class LessonController {
 
         ArrayList<Lesson> lessons = new ArrayList<Lesson>(course.getLessons());
 
-        if(user.getRole().getName().equals("teacher")) {
+        if(user.is("teacher")) {
             mv.addObject("groups", courseBean.groups(course, user));
         }
 
@@ -103,10 +103,16 @@ public class LessonController {
 
         ModelAndView mv = new ModelAndView("lesson");
         Course course = courseBean.getBy(cid);
+        Lesson lesson = lessonBean.getBy(lid);
         User user = (User) request.getSession().getAttribute("user");
         List<LessonAttachment> attachments = attachmentBean.getList(lid);
 
         if (!userBean.hasCourse(user, cid)) {
+            response.sendRedirect("/403");
+            return null;
+        }
+
+        if (!lesson.getCourse().equals(course)) {
             response.sendRedirect("/403");
             return null;
         }
@@ -156,7 +162,7 @@ public class LessonController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("teacher")) {
+        if (!user.is("teacher")) {
             response.sendRedirect("/403");
             return null;
         }

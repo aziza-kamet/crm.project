@@ -54,7 +54,7 @@ public class GroupController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return null;
         }
@@ -222,7 +222,7 @@ public class GroupController {
 
         ModelAndView mv = new ModelAndView("group_courses");
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return null;
         }
@@ -245,7 +245,7 @@ public class GroupController {
 
         ModelAndView mv = new ModelAndView("group_courses");
         User user = (User) request.getSession().getAttribute("user");
-        if (!user.getRole().getName().equals("admin")) {
+        if (!user.is("admin")) {
             response.sendRedirect("403");
             return null;
         }
@@ -304,7 +304,7 @@ public class GroupController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (user.getRole().getName().equals("admin")) {
+        if (user.is("admin")) {
             response.sendRedirect("403");
             return null;
         }

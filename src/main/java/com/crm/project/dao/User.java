@@ -166,4 +166,8 @@ public class User {
         }
         return false;
     }
+
+    public boolean is(String role) {
+        return getRole().getName().equals(role);
+    }
 }

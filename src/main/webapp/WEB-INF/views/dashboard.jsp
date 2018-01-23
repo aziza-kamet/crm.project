@@ -87,7 +87,7 @@
                     </div>
                     <div class="form-group">
                         <label>Содержание</label>
-                        <textarea class="form-control" name="content"></textarea>
+                        <textarea class="form-control ckeditor" name="content"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -114,7 +114,7 @@
                     </div>
                     <div class="form-group">
                         <label>Содержание</label>
-                        <textarea class="form-control js-content" name="content"></textarea>
+                        <textarea class="form-control js-content ckeditor" name="content"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -138,6 +138,7 @@
         modal.find('form').attr("method", "post");
         modal.find('.js-title').val(title);
         modal.find('.js-content').val(content);
+        console.log(CKEDITOR.instances['content'].setData(content));
     })
 </script>
 </html>
