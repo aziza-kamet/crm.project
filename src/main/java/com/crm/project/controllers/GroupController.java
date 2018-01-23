@@ -143,16 +143,7 @@ public class GroupController {
             return;
         }
 
-        Group group = groupBean.getBy(id);
-        for (String sid:
-             students) {
-            try {
-                group.getUsers().add(userBean.getBy(Long.parseLong(sid)));
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-        groupBean.update(group);
+        groupBean.addUsers(id, students);
 
         response.sendRedirect("/groups/" + id + "/students");
     }
@@ -166,9 +157,7 @@ public class GroupController {
             return;
         }
 
-        Group group = groupBean.getBy(gid);
-        group.getUsers().remove(userBean.getBy(sid));
-        groupBean.update(group);
+        groupBean.removeUser(gid, userBean.getBy(sid));
 
         response.sendRedirect("/groups/" + gid + "/students");
     }
@@ -182,16 +171,7 @@ public class GroupController {
             return;
         }
 
-        Group group = groupBean.getBy(id);
-        for (String tid:
-                teachers) {
-            try {
-                group.getUsers().add(userBean.getBy(Long.parseLong(tid)));
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-        groupBean.update(group);
+        groupBean.addUsers(id, teachers);
 
         response.sendRedirect("/groups/" + id + "/teachers");
     }
@@ -205,9 +185,7 @@ public class GroupController {
             return;
         }
 
-        Group group = groupBean.getBy(gid);
-        group.getUsers().remove(userBean.getBy(tid));
-        groupBean.update(group);
+        groupBean.removeUser(gid, userBean.getBy(tid));
 
         response.sendRedirect("/groups/" + gid + "/teachers");
     }
@@ -266,16 +244,14 @@ public class GroupController {
             return;
         }
 
-        Group group = groupBean.getBy(id);
         for (String tid:
                 courses) {
             try {
-                group.getCourses().add(courseBean.getBy(Long.parseLong(tid)));
+                 groupBean.addCourse(id, courseBean.getBy(Long.parseLong(tid)));
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
         }
-        groupBean.update(group);
 
         response.sendRedirect("/groups");
     }
@@ -289,9 +265,7 @@ public class GroupController {
             return;
         }
 
-        Group group = groupBean.getBy(gid);
-        group.getCourses().remove(courseBean.getBy(cid));
-        groupBean.update(group);
+        groupBean.removeCourse(gid, courseBean.getBy(cid));
 
         response.sendRedirect("/groups");
     }

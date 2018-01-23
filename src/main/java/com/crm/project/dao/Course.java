@@ -33,7 +33,6 @@ public class Course {
     private Company company;
 
     @OneToMany
-    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "course_id")
     @Where(clause = "active = 1")
     private List<Lesson> lessons;
@@ -43,7 +42,6 @@ public class Course {
     private List<GroupCourse> groupCourses;
 
     @ManyToMany
-    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "group_courses",
             joinColumns = { @JoinColumn(name = "course_id") },

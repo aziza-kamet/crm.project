@@ -79,13 +79,11 @@ public class LessonController {
             return null;
         }
 
-        ArrayList<Lesson> lessons = new ArrayList<Lesson>(course.getLessons());
-
         if(user.is("teacher")) {
             mv.addObject("groups", courseBean.groups(course, user));
         }
 
-        mv.addObject("lessons", course.getLessons());
+        mv.addObject("lessons", courseBean.getLessons(course));
         mv.addObject("cid", cid);
         mv.addObject("course", course);
         return mv;

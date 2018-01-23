@@ -20,6 +20,8 @@ public class GroupBean {
     CompanyBean companyBean;
     @Autowired
     RoleBean roleBean;
+    @Autowired
+    UserBean userBean;
 
     private SessionFactory sessionFactory;
 
@@ -209,37 +211,6 @@ public class GroupBean {
         return new ArrayList<User>();
     }
 
-    public List<User> teachersOut(Company company, Group group) {
-
-        try{
-
-            Session session = sessionFactory.openSession();
-            CriteriaBuilder builder = session.getCriteriaBuilder();
-
-            CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
-            Root<User> usersTable = criteriaQuery.from(User.class);
-            Join<User, GroupUser> groupUserJoin = usersTable.join("groupUsers", JoinType.LEFT);
-            Predicate teachersPredicate = builder.equal(usersTable.get("role"), roleBean.getBy("teacher"));
-            Predicate companyPredicate = builder.equal(usersTable.get("company"), company);
-            Predicate groupPredicate = builder.notEqual(groupUserJoin.get("group"), group);
-            Predicate activePredicate = builder.equal(usersTable.get("active"), 1);
-            criteriaQuery.select(usersTable);
-            criteriaQuery.where(builder.and(teachersPredicate, companyPredicate, groupPredicate, activePredicate));
-
-            Query query = session.createQuery(criteriaQuery);
-
-            List<User> resultList = query.getResultList();
-            session.close();
-
-            return resultList;
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return new ArrayList<User>();
-    }
-
     public List<User> teachers(Group group) {
 
         try{
@@ -296,16 +267,6 @@ public class GroupBean {
             criteriaQuery.select(coursesTable);
             criteriaQuery.where(coursePredicates);
 
-//            Root<Course> coursesTable = criteriaQuery.from(Course.class);
-//            Join<Course, GroupCourse> groupCourseJoin = coursesTable.join("groupCourses", JoinType.LEFT);
-//            Predicate companyPredicate = builder.equal(coursesTable.get("company"), company);
-//            Predicate outPredicate = groupCourseJoin.isNull();
-//            Predicate othersPredicate = builder.notEqual(groupCourseJoin.get("group"), group);
-//            Predicate orPredicate = builder.or(outPredicate, othersPredicate);
-//            Predicate activePredicate = builder.equal(coursesTable.get("active"), 1);
-//            criteriaQuery.select(coursesTable);
-//            criteriaQuery.where(builder.and(companyPredicate, orPredicate, activePredicate));
-
             Query query = session.createQuery(criteriaQuery);
 
             List<Course> resultList = query.getResultList();
@@ -347,5 +308,76 @@ public class GroupBean {
         }
 
         return new ArrayList<Course>();
+    }
+
+    public void addCourse(Long gid, Course course) {
+        try{
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+
+            Group group = session.find(Group.class, gid);
+            group.getCourses().add(course);
+            session.update(group);
+            transaction.commit();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void removeCourse(Long gid, Course course) {
+        try{
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+
+            Group group = session.find(Group.class, gid);
+            group.getCourses().remove(course);
+            session.update(group);
+            transaction.commit();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void addUsers(Long gid, String[] studentIds) {
+        try{
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+
+            Group group = session.find(Group.class, gid);
+            for (String sid:
+                    studentIds) {
+                try {
+                    group.getUsers().add(userBean.getBy(Long.parseLong(sid)));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+            session.update(group);
+            transaction.commit();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void removeUser (Long gid, User user) {
+        try{
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+
+            Group group = session.find(Group.class, gid);
+            group.getUsers().remove(user);
+            session.update(group);
+            transaction.commit();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

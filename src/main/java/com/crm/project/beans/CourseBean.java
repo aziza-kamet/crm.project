@@ -89,6 +89,33 @@ public class CourseBean {
         return new ArrayList<Course>();
     }
 
+    public List<Lesson> getLessons(Course course) {
+
+        try{
+
+            Session session = sessionFactory.openSession();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+
+            CriteriaQuery<Lesson> criteriaQuery = builder.createQuery(Lesson.class);
+            Root<Lesson> lessonsTable = criteriaQuery.from(Lesson.class);
+            Predicate predicates[] = {
+                    builder.equal(lessonsTable.get("course"), course),
+                    builder.equal(lessonsTable.get("active"), 1)
+            };
+            criteriaQuery.select(lessonsTable);
+            criteriaQuery.where(builder.and(predicates));
+
+            Query query = session.createQuery(criteriaQuery);
+
+            return query.getResultList();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return new ArrayList<Lesson>();
+    }
+
     public void update(Long id, String name, String description) {
         try{
 

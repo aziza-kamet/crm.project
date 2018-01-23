@@ -43,7 +43,6 @@ public class Group {
     private List<GroupCourse> groupCourses;
 
     @ManyToMany
-    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "group_users",
             joinColumns = { @JoinColumn(name = "group_id") },
@@ -51,7 +50,6 @@ public class Group {
     private List<User> users;
 
     @ManyToMany
-    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "group_courses",
             joinColumns = { @JoinColumn(name = "group_id") },
