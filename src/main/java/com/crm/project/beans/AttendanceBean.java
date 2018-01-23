@@ -42,7 +42,7 @@ public class AttendanceBean {
         }
     }
 
-    public Attendance getBy(Lesson lesson, User user) {
+    public ArrayList<Attendance> getBy(Lesson lesson, User user) {
 
         try{
 
@@ -58,7 +58,7 @@ public class AttendanceBean {
 
             Query query = session.createQuery(criteriaQuery);
 
-            return (Attendance) query.getSingleResult();
+            return (ArrayList<Attendance>) query.getResultList();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -74,6 +74,23 @@ public class AttendanceBean {
             Transaction transaction = session.beginTransaction();
 
             session.update(attendance);
+            transaction.commit();
+            session.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(Long id) {
+        try{
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+
+            Attendance attendance = session.find(Attendance.class, id);
+
+            session.delete(attendance);
             transaction.commit();
             session.close();
 
@@ -141,7 +158,6 @@ public class AttendanceBean {
                     results) {
                 Lesson lesson = (Lesson) obj[2];
                 obj[1] = ((Double) obj[1]) * 100;
-//                attendances.put(lesson.getId(), obj);
 
 
 

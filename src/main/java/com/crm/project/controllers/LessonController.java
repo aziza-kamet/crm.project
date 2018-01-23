@@ -188,6 +188,38 @@ public class LessonController {
         return mv;
     }
 
+    @GetMapping("/lessons/{lid}/groups/{gid}/student/{sid}")
+    public ModelAndView studentGrades(HttpServletRequest request, HttpServletResponse response,
+                              @PathVariable(name = "lid") Long lid,
+                              @PathVariable(name = "gid") Long gid,
+                              @PathVariable(name = "sid") Long sid) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return null;
+        }
+
+        User user = (User) request.getSession().getAttribute("user");
+        if (!user.is("teacher")) {
+            response.sendRedirect("/403");
+            return null;
+        }
+        if (!userBean.hasGroup(user, groupBean.getBy(gid))) {
+            response.sendRedirect("/403");
+            return null;
+        }
+
+        ModelAndView mv = new ModelAndView("student_lesson_grades");
+        Lesson lesson = lessonBean.getBy(lid);
+        Group group = groupBean.getBy(gid);
+        User student = userBean.getBy(sid);
+
+        mv.addObject("lesson", lesson);
+        mv.addObject("group", group);
+        mv.addObject("marks", markBean.getBy(lesson, student));
+        mv.addObject("attendances", attendanceBean.getBy(lesson, student));
+        return mv;
+    }
+
     @PostMapping("/lessons/{lid}/groups/{gid}/students/{sid}")
     public void setGrade(HttpServletRequest request, HttpServletResponse response,
                        @PathVariable(name = "lid") Long lid,

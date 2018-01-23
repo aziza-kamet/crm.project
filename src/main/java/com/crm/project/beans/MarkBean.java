@@ -46,10 +46,12 @@ public class MarkBean {
         }
     }
 
-    public Mark getBy(Lesson lesson, User user) {
+    public ArrayList<Mark> getBy(Lesson lesson, User user) {
 
         try{
 
+            System.out.println("uid = " + user.getId());
+            System.out.println("lid = " + lesson.getId());
             Session session = sessionFactory.openSession();
             CriteriaBuilder builder = session.getCriteriaBuilder();
 
@@ -62,7 +64,7 @@ public class MarkBean {
 
             Query query = session.createQuery(criteriaQuery);
 
-            return (Mark) query.getSingleResult();
+            return (ArrayList<Mark>) query.getResultList();
 
         }catch (Exception e){
             e.printStackTrace();

@@ -6,6 +6,8 @@ import com.crm.project.helpers.AuthChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,4 +23,17 @@ public class AttendanceController {
     @Autowired
     AttendanceBean attendanceBean;
 
+    @PostMapping("lessons/{lid}/groups/{gid}/attendances/{aid}")
+    public void delete(HttpServletRequest request, HttpServletResponse response,
+                       @PathVariable(name = "lid") Long lid,
+                       @PathVariable(name = "gid") Long gid,
+                       @PathVariable(name = "aid") Long aid) throws IOException {
+
+        if (!AuthChecker.isAuth(request.getSession(), response)) {
+            return;
+        }
+
+        attendanceBean.delete(aid);
+        response.sendRedirect("/lessons/" + lid + "/groups/" + gid + "/grades");
+    }
 }

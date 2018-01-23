@@ -35,89 +35,50 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ФИО</th>
-                                    <th>Оценка</th>
+                                    <th>Оценки</th>
                                     <th>Посещаемость</th>
-                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach items="${students}" var="student">
                                     <tr>
                                         <td>
-                                            ${student.name} ${student.surname}
+                                            <c:forEach items="${marks}" var="mark">
+                                                <span class="badge badge-info badge-lg position-relative">
+                                                    <div class="tools-right tools-small">
+                                                        <form action="/lessons/${lesson.id}/groups/${group.id}/grades/${mark.id}" method="post">
+                                                            <button class="btn btn-link no-padding"><i class="fa fa-remove"></i></button>
+                                                        </form>
+                                                    </div>
+                                                    ${mark.markValue}
+                                                    <c:if test="${mark.markNotes != ''}">
+                                                        (${mark.markNotes})
+                                                    </c:if>
+                                                </span>
+                                            </c:forEach>
                                         </td>
                                         <td>
-                                            ${avgMarks.get(student.id)}
-                                            <a href="#" data-toggle="modal" data-target="#add-modal-${student.id}"><i class="fa fa-plus"></i></a>
-                                        </td>
-                                        <td>
-                                            <c:if test="${avgAttendances.get(student.id) ne null}">
-                                                ${avgAttendances.get(student.id)}%
-                                            </c:if>
-                                            <a href="#" data-toggle="modal" data-target="#add-att-modal-${student.id}"><i class="fa fa-plus"></i></a>
-                                        </td>
-                                        <td>
-                                            <a href="/lessons/${lesson.id}/groups/${group.id}/student/${student.id}"><i class="fa fa-list"></i></a>
+                                            <c:forEach items="${attendances}" var="attendance">
+                                                <span class="badge badge-info badge-lg position-relative">
+                                                    <div class="tools-right tools-small">
+                                                        <form action="/lessons/${lesson.id}/groups/${group.id}/attendances/${attendance.id}" method="post">
+                                                            <button class="btn btn-link no-padding"><i class="fa fa-remove"></i></button>
+                                                        </form>
+                                                    </div>
+                                                    <c:choose>
+                                                        <c:when test="${attendance.attendanceValue eq 0}">
+                                                            Отсутствовал
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            Присутствовал
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                    <c:if test="${attendance.attendanceNote ne ''}">
+                                                        (${attendance.attendanceNote})
+                                                    </c:if>
+                                                </span>
+                                            </c:forEach>
                                         </td>
                                     </tr>
-                                    <div id="add-modal-${student.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-                                        <div role="document" class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 id="exampleModalLabel" class="modal-title">Поставить оценку</h4>
-                                                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                <form action="/lessons/${lesson.id}/groups/${group.id}/students/${student.id}" method="post">
-                                                    <div class="form-group">
-                                                        <input type="text" placeholder="Оценка" class="form-control" name="grade"
-                                                            pattern="[0-9]*" title="Оценка должна содержать только цифры">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input type="text" placeholder="Заметка" class="form-control" name="note">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <div class="col-sm-12">
-                                                            <button type="submit" class="btn btn-primary pull-right">Сохранить</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div id="add-att-modal-${student.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-                                        <div role="document" class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Поставить посещаемость</h4>
-                                                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form action="/lessons/${lesson.id}/groups/${group.id}/students/${student.id}/attendances" method="post">
-                                                        <div class="form-group">
-                                                            <div class="i-checks">
-                                                                <input id="attendance-${student.id}" type="checkbox" name="attendance"
-                                                                   class="checkbox-template" checked>
-                                                                <label for="attendance-${student.id}">Присутствовал/а</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input type="text" placeholder="Заметка" class="form-control" name="note">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <div class="col-sm-12">
-                                                                <button type="submit" class="btn btn-primary pull-right">Сохранить</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>
