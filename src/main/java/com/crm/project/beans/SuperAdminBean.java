@@ -10,6 +10,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.IOException;
+import java.io.StringReader;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +39,7 @@ public class SuperAdminBean {
             Session session = sessionFactory.openSession();
             Transaction transaction = session.beginTransaction();
 
-            session.save(new SuperAdmin(login, password));
+            session.save(new SuperAdmin(login, getEncrypted(password)));
             transaction.commit();
 
         }catch (Exception e){
@@ -72,7 +76,7 @@ public class SuperAdminBean {
             Root<SuperAdmin> superAdminsTable = criteriaQuery.from(SuperAdmin.class);
             criteriaQuery.select(superAdminsTable);
             Predicate loginPredicate = builder.equal(superAdminsTable.get("login"), login);
-            Predicate passwordPredicate = builder.equal(superAdminsTable.get("password"), password);
+            Predicate passwordPredicate = builder.equal(superAdminsTable.get("password"), getEncrypted(password));
             Predicate activePredicate = builder.equal(superAdminsTable.get("active"), 1);
             criteriaQuery.where(builder.and(loginPredicate, passwordPredicate, activePredicate));
 
@@ -134,7 +138,7 @@ public class SuperAdminBean {
             Transaction transaction = session.beginTransaction();
 
             SuperAdmin superAdmin = session.find(SuperAdmin.class, id);
-            superAdmin.setPassword(password);
+            superAdmin.setPassword(getEncrypted(password));
             session.update(superAdmin);
             transaction.commit();
 
@@ -157,5 +161,29 @@ public class SuperAdminBean {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private String getEncrypted(String originalString) {
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(
+                    org.apache.commons.io.IOUtils.toByteArray(
+                            new StringReader(originalString), "UTF-8"
+                    ));
+
+            StringBuffer hexString = new StringBuffer();
+            for (byte aHash : hash) {
+                String hex = Integer.toHexString(0xff & aHash);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

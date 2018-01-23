@@ -20,15 +20,6 @@ public class LessonAttachment {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "mime", columnDefinition = "VARCHAR(255)")
-    private String mime;
-
-    @Column(name = "size", columnDefinition = "BIGINT(20)")
-    private Integer size;
-
-    @Column(name = "attachment")
-    private Blob attachment;
-
     @Column(name = "uploadDate", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date uploadDate;
 
@@ -43,11 +34,8 @@ public class LessonAttachment {
     public LessonAttachment() {
     }
 
-    public LessonAttachment(String name, String mime, Integer size, Blob attachment, Lesson lesson, User user) {
+    public LessonAttachment(String name, Lesson lesson, User user) {
         this.name = name;
-        this.mime = mime;
-        this.size = size;
-        this.attachment = attachment;
         this.lesson = lesson;
         this.user = user;
     }
@@ -66,30 +54,6 @@ public class LessonAttachment {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getMime() {
-        return mime;
-    }
-
-    public void setMime(String mime) {
-        this.mime = mime;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    public Blob getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(Blob attachment) {
-        this.attachment = attachment;
     }
 
     public Date getUploadDate() {

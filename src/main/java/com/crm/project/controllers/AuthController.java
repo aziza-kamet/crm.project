@@ -50,7 +50,12 @@ public class AuthController {
         if (!AuthChecker.isAuth(request.getSession(), response)) {
             return;
         }
+
+        String path = "/";
+        if (request.getSession().getAttribute("role").equals("superadmin")) {
+            path = "/superadmin";
+        }
         request.getSession().invalidate();
-        response.sendRedirect("/");
+        response.sendRedirect(path);
     }
 }

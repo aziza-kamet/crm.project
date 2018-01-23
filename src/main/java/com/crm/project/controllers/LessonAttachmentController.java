@@ -2,10 +2,12 @@ package com.crm.project.controllers;
 
 import com.crm.project.beans.LessonAttachmentBean;
 import com.crm.project.beans.LessonBean;
+import com.crm.project.beans.UserBean;
 import com.crm.project.dao.Lesson;
 import com.crm.project.dao.LessonAttachment;
 import com.crm.project.dao.User;
 import com.crm.project.helpers.AuthChecker;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.sql.Blob;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,6 +36,8 @@ public class LessonAttachmentController {
     LessonAttachmentBean attachmentBean;
     @Autowired
     LessonBean lessonBean;
+    @Autowired
+    UserBean userBean;
 
     @GetMapping("/lessons/{lid}/attachments")
     public ModelAndView auth(HttpServletRequest request, HttpServletResponse response,
@@ -60,36 +64,86 @@ public class LessonAttachmentController {
             return;
         }
 
+        User user = (User) request.getSession().getAttribute("user");
         Lesson lesson = lessonBean.getBy(lid);
 
-        try {
-            User user = (User) request.getSession().getAttribute("user");
-            attachmentBean.create(name, file, lid, user);
-        } catch (MaxUploadSizeExceededException e) {
-            e.printStackTrace();
+        if (!userBean.hasCourse(user, lesson.getCourse().getId())) {
+            response.sendRedirect("/403");
+            return;
         }
+
+        if (!file.isEmpty()) {
+
+            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+
+            if (!Arrays.asList(attachmentBean.getExtensions()).contains(extension)) {
+                response.sendRedirect("/courses/" + lesson.getCourse().getId() + "/lessons/" + lid);
+                return;
+            }
+
+            if (name.equals("")) {
+                name = file.getOriginalFilename();
+            } else {
+                name = name + "." + extension;
+            }
+
+            try {
+                byte[] bytes = file.getBytes();
+
+                String rootPath = request.getSession().getServletContext().getRealPath("/resources/images/attachments");
+                File dir = new File(rootPath + File.separator + "lesson_" + lid);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+
+                File serverFile = new File(dir.getAbsolutePath()
+                        + File.separator + name);
+                BufferedOutputStream stream = new BufferedOutputStream(
+                        new FileOutputStream(serverFile));
+                stream.write(bytes);
+                stream.close();
+
+                attachmentBean.create(name, lesson, user);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+//            TODO show error message
+        }
+
         response.sendRedirect("/courses/" + lesson.getCourse().getId() + "/lessons/" + lid);
     }
 
-    @GetMapping("/attachments/{id}/download")
+    @GetMapping("lessons/{lid}/attachments/{aid}")
     public void download(HttpServletRequest request, HttpServletResponse response,
-                         @PathVariable(name = "id") Long id) throws IOException {
+                         @PathVariable(name = "lid") Long lid,
+                         @PathVariable(name = "aid") Long aid) throws IOException {
 
         if (!AuthChecker.isAuth(request.getSession(), response)) {
             return;
         }
 
-        LessonAttachment attachment = attachmentBean.getBy(id);
-        try {
-            response.setHeader("Content-Disposition", "inline;filename=\"" + attachment.getName() + "\"");
-            OutputStream out = response.getOutputStream();
-            response.setContentType(attachment.getMime());
-            IOUtils.copy(attachment.getAttachment().getBinaryStream(), out);
-            out.flush();
-            out.close();
+        User user = (User) request.getSession().getAttribute("user");
+        Lesson lesson = lessonBean.getBy(lid);
+        LessonAttachment attachment = attachmentBean.getBy(aid);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!userBean.hasCourse(user, lesson.getCourse().getId())
+                || !lessonBean.hasAttachment(lesson, attachment)) {
+            response.sendRedirect("/403");
+            return;
+        }
+
+
+        try {
+            BufferedInputStream is = new BufferedInputStream(new FileInputStream(
+                    new File(request.getSession().getServletContext().getRealPath("/resources/images/attachments")
+                            + File.separator + "lesson_" + lid + File.separator + attachment.getName())
+            ));
+            org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
+            response.flushBuffer();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
 
     }

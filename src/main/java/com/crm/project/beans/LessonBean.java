@@ -180,4 +180,32 @@ public class LessonBean {
 
         return null;
     }
+
+    public boolean hasAttachment(Lesson lesson, LessonAttachment attachment) {
+
+        try{
+
+            Session session = sessionFactory.openSession();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+
+            CriteriaQuery<LessonAttachment> criteriaQuery = builder.createQuery(LessonAttachment.class);
+            Root<LessonAttachment> attachmentsTable = criteriaQuery.from(LessonAttachment.class);
+            Predicate predicates[] = {
+                    builder.equal(attachmentsTable.get("id"), attachment.getId()),
+                    builder.equal(attachmentsTable.get("lesson"), lesson)
+            };
+            criteriaQuery.select(attachmentsTable);
+            criteriaQuery.where(builder.and(predicates));
+            Query query = session.createQuery(criteriaQuery);
+
+            List list = query.getResultList();
+            return list.size() != 0;
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
 }

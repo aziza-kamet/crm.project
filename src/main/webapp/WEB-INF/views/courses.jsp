@@ -127,25 +127,21 @@
                                                 <div class="card-header" id="course-${course.id}">
                                                     <div class="row">
                                                         <div class="col-sm-4">
-                                                            <%--<h2 class="mb-0">--%>
-                                                                ${course.name}
-                                                            <%--</h2>--%>
+                                                            ${course.name}
                                                         </div>
                                                         <div class="col-sm-3">
-                                                            <%--<h3 class="mb-0">--%>
-                                                                <fmt:formatNumber var="mark_avg"
-                                                                  value="${marks.get(course.id).get('avg')}"
-                                                                  maxFractionDigits="2"  />
-                                                                ${mark_avg}
-                                                            <%--</h3>--%>
+                                                            <fmt:formatNumber var="mark_avg"
+                                                              value="${marks.get(course.id).get('avg')}"
+                                                              maxFractionDigits="2"  />
+                                                            ${mark_avg}
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <%--<h3 class="mb-0">--%>
+                                                            <c:if test="${attendances.get(course.id).get('avg') ne null}">
                                                                 <fmt:formatNumber var="att_avg"
                                                                   value="${attendances.get(course.id).get('avg')}"
                                                                   maxFractionDigits="2"  />
                                                                 ${att_avg}%
-                                                            <%--</h3>--%>
+                                                            </c:if>
                                                         </div>
                                                         <div class="col-sm-1">
                                                             <button class="btn btn-link pull-right" data-toggle="collapse"

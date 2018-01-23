@@ -365,6 +365,7 @@ public class UserBean {
             e.printStackTrace();
         }
     }
+
     private String getEncrypted(String originalString) {
         MessageDigest digest = null;
         try {

@@ -53,31 +53,13 @@ public class LessonAttachmentBean {
         this.sessionFactory = sessionFactory;
     }
 
-    public void create(String name, MultipartFile file, Long lid, User user) {
+    public void create(String name, Lesson lesson, User user) {
         try{
 
             Session session = sessionFactory.openSession();
             Transaction transaction = session.beginTransaction();
 
-            Blob blob = Hibernate.getLobCreator(session).createBlob(file.getBytes());
-            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-
-            if (!Arrays.asList(extensions).contains(extension)) {
-                return;
-            }
-
-            if (file.getSize() > 5000000) {
-                return;
-            }
-
-            Lesson lesson = lessonBean.getBy(lid);
-            if (name == null || name.equals("")) {
-                name = file.getOriginalFilename();
-            } else {
-                name = name + "." + extension;
-            }
-
-            session.save(new LessonAttachment(name, file.getContentType(), (int) file.getSize(), blob, lesson, user));
+            session.save(new LessonAttachment(name, lesson, user));
             transaction.commit();
 
         }catch (Exception e){
@@ -136,9 +118,9 @@ public class LessonAttachmentBean {
             Lesson lesson = lessonBean.getBy(lid);
             LessonAttachment lessonAttachment = session.find(LessonAttachment.class, id);
             lessonAttachment.setName(name);
-            lessonAttachment.setMime(mime);
-            lessonAttachment.setSize(size);
-            lessonAttachment.setAttachment(attachment);
+//            lessonAttachment.setMime(mime);
+//            lessonAttachment.setSize(size);
+//            lessonAttachment.setAttachment(attachment);
             lessonAttachment.setUploadDate(uploadDate);
             lessonAttachment.setLesson(lesson);
             session.update(lessonAttachment);
@@ -162,5 +144,9 @@ public class LessonAttachmentBean {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public String[] getExtensions() {
+        return this.extensions;
     }
 }

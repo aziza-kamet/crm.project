@@ -64,7 +64,7 @@
                                             <div class="row no-padding no-margin-bottom">
                                                 <c:forEach items="${lesson.attachments}" var="attachment">
                                                     <div class="col-sm-2">
-                                                        <a href="/attachments/${attachment.id}/download" target="_blank"
+                                                        <a href="/lessons/${lesson.id}/attachments/${attachment.id}" target="_blank"
                                                            class="badge badge-info badge-lg position-relative">
                                                             <i class="fa fa-file"></i>
                                                                 ${attachment.name}

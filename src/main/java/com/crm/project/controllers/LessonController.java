@@ -110,7 +110,13 @@ public class LessonController {
             return null;
         }
 
-        if (!lesson.getCourse().equals(course)) {
+        try {
+            if (!lesson.getCourse().equals(course)) {
+                response.sendRedirect("/403");
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             response.sendRedirect("/403");
             return null;
         }
